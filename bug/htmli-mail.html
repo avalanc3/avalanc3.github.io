@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en-US">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bug Report</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="crossorigin" />
+    <link rel="preload" as="style"
+        href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;700;800&amp;display=swap" />
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;700;800&amp;display=swap" media="print"
+        onload="this.media='all'" />
+    <noscript>
+        <link rel="stylesheet"
+            href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;700;800&amp;display=swap" />
+    </noscript>
+    <link href="../css/font-awesome/css/all.min.css?ver=1.2.0" rel="stylesheet">
+    <link href="../css/bootstrap-icons/bootstrap-icons.css?ver=1.2.0" rel="stylesheet">
+    <link href="../css/bootstrap.min.css?ver=1.2.0" rel="stylesheet">
+    <link href="../css/aos.css?ver=1.2.0" rel="stylesheet">
+    <link href="../css/main.css?ver=1.2.0" rel="stylesheet">
+    <link href="../css/code-con.css" rel="stylesheet">
+    <noscript>
+        <style type="text/css">
+            [data-aos] {
+                opacity: 1 !important;
+                transform: translate(0) scale(1) !important;
+            }
+        </style>
+    </noscript>
+    
+</head>
+
+<body id="top">
+    <header class="bg-light">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light" id="header-nav" role="navigation">
+            <div class="container"><a class="link-dark navbar-brand site-title mb-0" href="#">Bug Reports</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation"><span
+                        class="navbar-toggler-icon"></span></button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav ms-auto me-2">
+                        <li class="nav-item"><a class="nav-link" href="../#about">About</a></li>
+                        <li class="nav-item"><a class="nav-link" href="../bugbounty.html#">Bug Hunting</a></li>
+                        <li class="nav-item"><a class="nav-link" href="../blogs.html">Blogs</a></li>   
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div class="page-content">
+        <div id="content">
+            <header>
+            </header>
+
+
+
+
+
+
+            <div class="section px-3 px-lg-4 pt-5" id="webbug">
+                <div class="container-narrow">
+                    <div class="text-center mb-5">
+                        <h2 class="marker marker-center">HTML-I</h2>
+                    </div>
+                    <div class="row">
+                        <div>
+                            <div class="card mb-3" data-aos="fade-right" data-aos-delay="100">
+                                <div class="card-header px-3 py-2">
+                                    <div class="d-flex justify-content-center">
+                                        <div>
+                                            <h3 class="h5  mb-1">HTML Injection at Email triggering &nbsp;</h3>
+                                            <small>Date: 26/7/2023</small>
+                                        </div><img src="../images/services/webpage.svg" width="48" height="45"
+                                            alt="ui-ux" />
+                                    </div>
+                                </div>
+                                <div class="card-body px-3 py-2">
+                                    <p>
+                                        In the domain example.com, There was a website that had a form. The form took inputs such as first name, last name, email address, and sent an email to the user. I filled out the form and intercepted the request using Burp Suite.
+                                        </p>
+                                    <div class="code-container" id="code1">
+                                        <div class="code-header">
+                                            <span>Burp Request</span>
+                                            <button class="copy-button" onclick="copyCode('code1')">Copy</button>
+                                        </div>
+                                        <div class="code-content">
+                                            <pre>
+    <code>
+POST /subscribe/form HTTP/1.1
+Host: www.example.com
+Cookie:
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:120.0) Gecko/20100101 Firefox/120.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+Accept-Language: en-US,en;q=0.8,en-US;q=0.5,en;q=0.3
+Accept-Encoding: gzip, deflate, br
+Content-Type: application/x-www-form-urlencoded
+Content-Length: 30
+Origin: https://www.example.com
+Referer: https://www.example.com/subscribe/form
+Upgrade-Insecure-Requests: 1
+Sec-Fetch-Dest: document
+Sec-Fetch-Mode: navigate
+Sec-Fetch-Site: same-origin
+Sec-Fetch-User: ?1
+Te: trailers
+Connection: close
+        
+emailAddress=test%40mail.com&firstname=John&lastname=Doe</code></pre>
+
+                                        </div>
+                                    </div><br>
+                                    <p>
+                                        After receiving the email, it addressed the recipient as "Hi John Doe," highlighting both the last name and first name. 
+                                        Consequently, I made an attempt  to inject HTML form code, resulting in the highlighting of my HTML code in the email. 
+                                    </p><br>
+                                    <p>
+                                      <code
+                                            style="background-color: black;"><b> Firstname=%3Cform%20%3E%3Cinput%3E%3C%2Finput%3E%3Cinput%20type%3D%22submit%22%2F%3E%3C%2Fform%3E</b></code>
+                                    </p>
+
+                                    <br>
+                                    <img src="bug-images/htmli-mail1.PNG" width="900" height="150">  
+                                    <br>
+                                    <p><br>
+                                        Due to insufficient sanitization, the form was vulnerable to HTML injection (HTMLi). Malicious attackers could exploit this vulnerability to launch phishing campaigns and potentially extract sensitive data from unsuspecting users. HTML injection occurs when user input is not properly sanitized, allowing attackers to inject malicious HTML code into the web page. This injected code can manipulate the appearance and behavior of the page, leading to unauthorized actions or the theft of confidential information
+                                    </p><br>
+                                    <img src="bug-images/html-mail.PNG" width="900" height="150">
+
+                                </div>
+                            </div>
+                        </div>
+
+
+
+
+
+
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+    <div id="scrolltop"><a class="btn btn-secondary" href="#top"><span class="icon"><i
+                    class="fas fa-angle-up fa-x"></i></span></a></div>
+    <script src="../scripts/imagesloaded.pkgd.min.js?ver=1.2.0"></script>
+    <script src="../scripts/masonry.pkgd.min.js?ver=1.2.0"></script>
+    <script src="../scripts/BigPicture.min.js?ver=1.2.0"></script>
+    <script src="../scripts/purecounter.min.js?ver=1.2.0"></script>
+    <script src="../scripts/bootstrap.bundle.min.js?ver=1.2.0"></script>
+    <script src="../scripts/aos.min.js?ver=1.2.0"></script>
+    <script src="../scripts/main.js?ver=1.2.0"></script>
+    <script>
+        function copyCode(codeId) {
+            var codeContainer = document.getElementById(codeId).querySelector('.code-content');
+            var range = document.createRange();
+            range.selectNode(codeContainer);
+            window.getSelection().removeAllRanges();
+            window.getSelection().addRange(range);
+            document.execCommand('copy');
+            window.getSelection().removeAllRanges();
+
+            var copyButton = document.querySelector('.copy-button');
+            copyButton.classList.add('copied');
+
+            setTimeout(function () {
+                copyButton.classList.remove('copied');
+            }, 500);
+        }
+    </script>
+</body>
+
+</html>

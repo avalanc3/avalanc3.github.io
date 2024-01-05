@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bug Report</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="crossorigin"/>
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;700;800&amp;display=swap"/>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;700;800&amp;display=swap" media="print" onload="this.media='all'"/>
+    <noscript>
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;700;800&amp;display=swap"/>
+    </noscript>
+    <link href="../css/font-awesome/css/all.min.css?ver=1.2.0" rel="stylesheet">
+    <link href="../css/bootstrap-icons/bootstrap-icons.css?ver=1.2.0" rel="stylesheet">
+    <link href="../css/bootstrap.min.css?ver=1.2.0" rel="stylesheet">
+    <link href="../css/aos.css?ver=1.2.0" rel="stylesheet">
+    <link href="../css/main.css?ver=1.2.0" rel="stylesheet">
+    <link href="../css/code-con.css" rel="stylesheet">
+    <noscript>
+      <style type="text/css">
+        [data-aos] {
+            opacity: 1 !important;
+            transform: translate(0) scale(1) !important;
+        }
+      </style>
+    </noscript>
+    
+  </head>
+  <body id="top">
+    <header class="bg-light">
+      <nav class="navbar navbar-expand-lg navbar-light bg-light" id="header-nav" role="navigation">
+        <div class="container"><a class="link-dark navbar-brand site-title mb-0" href="#">Bug Reports</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav ms-auto me-2">
+              <li class="nav-item"><a class="nav-link" href="../#about">About</a></li>
+              <li class="nav-item"><a class="nav-link" href="../bugbounty.html#">Bug Hunting</a></li>
+              <li class="nav-item"><a class="nav-link" href="../blogs.html">Blogs</a></li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+    </header>
+    <div class="page-content">
+      <div id="content">
+<header>
+
+</header>
+
+
+
+
+
+
+<div class="section px-3 px-lg-4 pt-5" id="webbug">
+  <div class="container-narrow">
+    <div class="text-center mb-5">
+      <h2 class="marker marker-center">Firebase Misconfig</h2>
+    </div>
+    <div class="row">
+      <div >
+        <div class="card mb-3" data-aos="fade-right" data-aos-delay="100">
+          <div class="card-header px-3 py-2">
+            <div class="d-flex justify-content-center">
+              <div >
+                <h3 class="h5  mb-1">Sensitive Data Exposure  &nbsp;</h3>
+              </div><img src="../images/services/webpage.svg" width="48" height="45" alt="ui-ux"/>
+            </div>
+          </div>
+          <div class="card-body px-3 py-2">
+           <p>
+            After downloading the APK, I proceeded to decompile it using Jadx. During the decompilation process, I navigated to the strings file, where I discovered a Firebase URL.    
+        </p><code>&lt;string name="firebase_database_url"&gt;https://XXXX-XXXX-application.firebaseio.com&lt;/string&gt;</code>
+           
+        <p>On opening the link, on browser it was showing sensitive data Like Coupon code, email, transaction details etc</p>
+
+        <img src="bug-images/fireb.PNG" width="750" height="350">
+
+        <p>
+            <br>
+            A critical security vulnerability arises when users can access the /.json file of a Firebase database, leading to unauthorized data disclosure. This occurs due to misconfigurations in Firebase security rules, allowing unauthenticated or unauthorized users to read the entire database. By accessing the /.json endpoint, attackers can retrieve sensitive information, potentially exposing user data, authentication tokens, or other confidential details.
+        </p>
+
+           
+           
+            </div>
+        </div>
+      </div>
+      
+      
+     
+     
+      
+    </div>
+  </div>
+</div>
+
+
+</div>
+    </div>
+    <div id="scrolltop"><a class="btn btn-secondary" href="#top"><span class="icon"><i class="fas fa-angle-up fa-x"></i></span></a></div>
+    <script src="../scripts/imagesloaded.pkgd.min.js?ver=1.2.0"></script>
+    <script src="../scripts/masonry.pkgd.min.js?ver=1.2.0"></script>
+    <script src="../scripts/BigPicture.min.js?ver=1.2.0"></script>
+    <script src="../scripts/purecounter.min.js?ver=1.2.0"></script>
+    <script src="../scripts/bootstrap.bundle.min.js?ver=1.2.0"></script>
+    <script src="../scripts/aos.min.js?ver=1.2.0"></script>
+    <script src="../scripts/main.js?ver=1.2.0"></script>
+    <script>
+        function copyCode(codeId) {
+            var codeContainer = document.getElementById(codeId).querySelector('.code-content');
+            var range = document.createRange();
+            range.selectNode(codeContainer);
+            window.getSelection().removeAllRanges();
+            window.getSelection().addRange(range);
+            document.execCommand('copy');
+            window.getSelection().removeAllRanges();
+
+            // Add the "copied" class to trigger the animation
+            var copyButton = document.querySelector('.copy-button');
+            copyButton.classList.add('copied');
+
+            // Remove the "copied" class after the animation duration
+            setTimeout(function() {
+                copyButton.classList.remove('copied');
+            }, 500);
+        }
+    </script>
+  </body>
+</html>

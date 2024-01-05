@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bug Report</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="crossorigin"/>
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;700;800&amp;display=swap"/>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;700;800&amp;display=swap" media="print" onload="this.media='all'"/>
+    <noscript>
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;700;800&amp;display=swap"/>
+    </noscript>
+    <link href="./css/font-awesome/css/all.min.css?ver=1.2.0" rel="stylesheet">
+    <link href="./css/bootstrap-icons/bootstrap-icons.css?ver=1.2.0" rel="stylesheet">
+    <link href="./css/bootstrap.min.css?ver=1.2.0" rel="stylesheet">
+    <link href="./css/aos.css?ver=1.2.0" rel="stylesheet">
+    <link href="./css/main.css?ver=1.2.0" rel="stylesheet">
+    <noscript>
+      <style type="text/css">
+        [data-aos] {
+            opacity: 1 !important;
+            transform: translate(0) scale(1) !important;
+        }
+      </style>
+    </noscript>
+    
+    <script>
+      function redirectToAnotherPage(parameter) {
+        window.location.href = '/' + parameter+'.html';
+      }
+    </script>
+  </head>
+  <body id="top">
+    <header class="bg-light">
+      <nav class="navbar navbar-expand-lg navbar-light bg-light" id="header-nav" role="navigation">
+        <div class="container"><a class="link-dark navbar-brand site-title mb-0" href="#">Bug Bounty Report</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav ms-auto me-2">
+              <li class="nav-item"><a class="nav-link" href="/#about">About</a></li>
+              <li class="nav-item"><a class="nav-link" href="#">Bug Hunting</a></li>
+              <li class="nav-item"><a class="nav-link" href="/blogs.html">Blogs</a></li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+    </header>
+    <div class="page-content">
+      <div id="content">
+<header>
+
+</header>
+
+
+
+
+<div class="section px-3 px-lg-4 pt-5" id="webbug">
+  <div class="container-narrow">
+    <div class="text-center mb-5">
+      <h2 class="marker marker-center">Web Bug Bounty</h2>
+    </div>
+    <div class="row">
+      <div class="col-md-6" style="cursor: pointer;" onclick="redirectToAnotherPage('bug/htmli-ato')">
+        <div class="card mb-3" data-aos="fade-right" data-aos-delay="100">
+          <div class="card-header px-3 py-2">
+            <div class="d-flex justify-content-between">
+              <div>
+                <h3 class="h5 mb-1">Account Takeover Via HTML Injection</h3>
+                <small>(Feb-2023)</small>
+                <!-- <div class="text-muted text-small">ISOEH Inc. <small>(2022-2022)</small></div> -->
+              </div><img src="images/services/webpage.svg" width="48" height="48" alt="ui-ux"/>
+            </div>
+          </div>
+          <div class="card-body px-3 py-2">
+            <p>This flaw allowed malicious actors to manipulate the content of the email, leading to a dangerous exploit known as "one-click account takeover." By injecting malicious HTML code into the password reset email, attackers could gain unauthorized access to user accounts with just a single click on a seemingly legitimate link. </p>
+            
+            </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="card mb-3"  style="cursor: pointer;" data-aos="fade-right" data-aos-delay="100" onclick="redirectToAnotherPage('bug/htmli-mail')">
+          <div class="card-header px-3 py-2">
+            <div class="d-flex justify-content-between">
+              <div>
+                <h3 class="h5 mb-1">HTML Injection on Mail </h3>
+                 <small>(July-2023)</small>
+              </div><img src="images/services/webpage.svg" width="48" height="48" alt="ui-ux"/>
+            </div>
+          </div>
+          <div class="card-body px-3 py-2">
+          <p>A website featured a form that collected user information, including first name, last name, and email. Unfortunately, the input fields for first name and last name were found to be vulnerable to HTML injection. This vulnerability allowed attackers to inject malicious HTML code, which was then reflected in the email received by the user.</p> 
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-6">
+        <div class="card mb-3" style="cursor: pointer;" data-aos="fade-right" data-aos-delay="100" onclick="redirectToAnotherPage('bug/ratel-bypass')">
+          <div class="card-header px-3 py-2">
+            <div class="d-flex justify-content-between">
+              <div>
+                <h3 class="h5 mb-1">Rate Limit Bypass</h3>
+                <small>(Aug-2023)</small>
+              </div><img src="images/services/webpage.svg" width="48" height="48" alt="ui-ux"/>
+            </div>
+          </div>
+          <div class="card-body px-3 py-2">
+          <p>Rate-limit protection is a fundamental defense mechanism that prevents abuse and unauthorized access by limiting the number of requests a user or entity can make within a specified time frame. However, certain flaws in its implementation can be exploited, potentially allowing attackers to bypass</p> 
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-6">
+        <div class="card mb-3" style="cursor: pointer;" data-aos="fade-right" data-aos-delay="100" onclick="redirectToAnotherPage('bug/otp-byp')">
+          <div class="card-header px-3 py-2">
+            <div class="d-flex justify-content-between">
+              <div>
+                <h3 class="h5 mb-1">OTP Verification Bypass</h3>
+                <small>(Aug-2021)</small>
+              </div><img src="images/services/webpage.svg" width="48" height="48" alt="ui-ux"/>
+            </div>
+          </div>
+          <div class="card-body px-3 py-2">
+          <p>Exploiting response manipulation to bypass OTP verification poses a critical security concern. By tampering with the response and replacing error messages with manipulated data, attackers can deceive the system into accepting invalid OTPs. </p> 
+            <br>
+        </div>
+        </div>
+      </div>
+
+      <div class="col-md-6">
+        <div class="card mb-3" style="cursor: pointer;" data-aos="fade-right" data-aos-delay="100" onclick="redirectToAnotherPage('bug/senstive-graphql')">
+          <div class="card-header px-3 py-2">
+            <div class="d-flex justify-content-between">
+              <div>
+                <h3 class="h5 mb-1">Sensitive Data Exposure via Graphql</h3>
+                <small>(Dec-2023)</small>
+              </div><img src="images/services/webpage.svg" width="48" height="48" alt="ui-ux"/>
+            </div>
+          </div>
+          <div class="card-body px-3 py-2">
+          <p>Enabling introspection queries in GraphQL APIs without stringent security measures poses a significant risk of sensitive data leakage. Unauthorized access, data enumeration, and information disclosure can occur, allowing attackers to exploit schema details for malicious purposes. Implementing access controls, query whitelisting, and rate limiting is crucial to mitigate these vulnerabilities.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-6">
+        <div class="card mb-3" style="cursor: pointer;" data-aos="fade-right" data-aos-delay="100" onclick="redirectToAnotherPage('bug/idor-0')">
+          <div class="card-header px-3 py-2">
+            <div class="d-flex justify-content-between">
+              <div>
+                <h3 class="h5 mb-1">IDOR</h3>
+                <small>(Dec-2022)</small>
+              </div><img src="images/services/webpage.svg" width="48" height="48" alt="ui-ux"/>
+            </div>
+          </div>
+          <div class="card-body px-3 py-2">
+          <p>Insecure Direct Object Reference (IDOR) exposes a vulnerability where attackers can delete data by manipulating identifiers. This flaw occurs when access controls and proper validation checks are lacking. Regular security audits and testing are essential to identify and rectify potential IDOR vulnerabilities, safeguarding the integrity and confidentiality of user data.</p> 
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-6">
+        <div class="card mb-3" style="cursor: pointer;" data-aos="fade-right" data-aos-delay="100" onclick="redirectToAnotherPage('bug/impac')">
+          <div class="card-header px-3 py-2">
+            <div class="d-flex justify-content-between">
+              <div>
+                <h3 class="h5 mb-1">Improper Access Control</h3>
+                <small>(Dec-2023)</small>
+              </div><img src="images/services/webpage.svg" width="48" height="48" alt="ui-ux"/>
+            </div>
+          </div>
+          <div class="card-body px-3 py-2">
+          <p>This flaw enables improper access control on files, allowing restricted users to read the content of files, thereby causing significant issues in the application.
+            This vulnerability may arise from misconfigured access controls, bypassed authentication mechanisms, or other flaws in the authorization process.          </p>  
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-6">
+        <div class="card mb-3" style="cursor: pointer;" onclick="redirectToAnotherPage('bug/csrf-ato')" data-aos="fade-right" data-aos-delay="100">
+          <div class="card-header px-3 py-2">
+            <div class="d-flex justify-content-between">
+              <div>
+                <h3 class="h5 mb-1">Account Takeover via CSRF</h3>
+                 <small>(October-2023)</small>
+              </div><img src="images/services/webpage.svg" width="48" height="48" alt="ui-ux"/>
+            </div>
+          </div>
+          <div class="card-body px-3 py-2">
+            <p>The vulnerability centers around the "Edit Profile" feature, a commonly implemented component in websites and applications allowing users to modify their account details. In this scenario, the attacker employs CSRF techniques to force the victim's account to update the associated email address without the user's knowledge or consent.</p>
+          </div>
+        </div>
+      </div>
+     
+     
+      
+    </div>
+  </div>
+</div>
+
+<div class="section px-3 px-lg-4 pt-5" id="webbug">
+  <div class="container-narrow">
+    <div class="text-center mb-5">
+      <h2 class="marker marker-center">Android Bug Bounty</h2>
+    </div>
+    <div class="row">
+      <div class="col-md-6">
+        <div class="card mb-3" style="cursor: pointer;" onclick="redirectToAnotherPage('bug/webv')" data-aos="fade-right" data-aos-delay="100">
+          <div class="card-header px-3 py-2">
+            <div class="d-flex justify-content-between">
+              <div>
+                <h3 class="h5 mb-1">WebViewActivity Exploit</h3>
+                <!-- <div class="text-muted text-small">ISOEH Inc. <small>(2022-2022)</small></div> -->
+              </div><img src="images/services/android.svg" width="48" height="48" alt="ui-ux"/>
+            </div>
+          </div>
+          <div class="card-body px-3 py-2">
+            <p> A WebView exploit involves a security flaw in mobile apps utilizing WebView components, allowing attackers to manipulate URLs for redirection. This vulnerability poses risks such as phishing and delivery of malicious content.
+              The redirection vulnerability, where malicious actors can manipulate URLs to redirect users to phishing sites or other malicious destinations.
+            </p>
+            
+            </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="card mb-3" style="cursor: pointer;" onclick="redirectToAnotherPage('bug/fireb')" data-aos="fade-right" data-aos-delay="100">
+          <div class="card-header px-3 py-2">
+            <div class="d-flex justify-content-between">
+              <div>
+                <h3 class="h5 mb-1">Sensitive Data Exposure via Firebase</h3>
+                <div class="text-muted text-small"><small>(Dec-2023)</small></div>
+              </div><img src="images/services/android.svg" width="48" height="48" alt="ui-ux"/>
+            </div>
+          </div>
+          <div class="card-body px-3 py-2">
+          <p>Most of the modern applications utilize Firebase to store data. Misconfigurations in Firebase can lead to issues related to both read and write access. These misconfigurations may inadvertently expose sensitive data or allow unauthorized parties to modify the database. Ensuring proper Firebase security configurations is crucial to prevent such vulnerabilities and safeguard the integrity and confidentiality of stored information. </p>  
+          </div>
+        </div>
+      </div>
+     
+     
+      
+    </div>
+  </div>
+</div>
+
+
+</div>
+    </div>
+    <div id="scrolltop"><a class="btn btn-secondary" href="#top"><span class="icon"><i class="fas fa-angle-up fa-x"></i></span></a></div>
+    <script src="./scripts/imagesloaded.pkgd.min.js?ver=1.2.0"></script>
+    <script src="./scripts/masonry.pkgd.min.js?ver=1.2.0"></script>
+    <script src="./scripts/BigPicture.min.js?ver=1.2.0"></script>
+    <script src="./scripts/purecounter.min.js?ver=1.2.0"></script>
+    <script src="./scripts/bootstrap.bundle.min.js?ver=1.2.0"></script>
+    <script src="./scripts/aos.min.js?ver=1.2.0"></script>
+    <script src="./scripts/main.js?ver=1.2.0"></script>
+  </body>
+</html>
