@@ -75,7 +75,7 @@
             The application xyz.com is a mail application, allowing users to send and receive emails. There is a feature, where users can create envelopes within the application, which serve as containers for storing multiple files. Each envelope is assigned a unique ID, providing a structured way for users to organize and manage their files effectively.
             But the envelope ID is too easy to Guess
             </p>
-            <img src="bug-images/idor0.png" width="500" height="330">
+            <img src="bug-images/idor0.PNG" width="500" height="330">
             <p><br>
                 During passive scanning with Burp Suite running in the background, I observed a request used to retrieve the content of envelopes, including file names, IDs, and other relevant information.
             </p>
@@ -132,7 +132,7 @@ Sec-Fetch-Mode: cors
 Sec-Fetch-Site: same-origin</code></pre>
             </div>
         </div>
-        <img src="bug-images/idor0-2.PNG" width="480" height="450">
+        <img src="bug-images/idor0-2.png" width="480" height="450">
         <p>I attempted to send a pre-flight request with the OPTION header to examine the allowed headers and server permissions.</p>
         <div class="code-container" id="code3">
             <div class="code-header">
@@ -159,7 +159,7 @@ Sec-Fetch-Site: same-origin</code></pre>
             </div>
         </div>
         <p><br>The response indicated that the allowed HTTP methods were Head, Get, Post, Patch, and Delete. </p>
-        <img src="bug-images/idor0-3.PNG" width="480" height="350">
+        <img src="bug-images/idor0-3.png" width="480" height="350">
         <p>Following the discovery that Delete was among the allowed HTTP methods, I attempted to send a delete request using the envelope ID of another account.<br></p>
         <div class="code-container" id="code4">
             <div class="code-header">
@@ -186,7 +186,7 @@ Sec-Fetch-Site: same-origin</code></pre>
             </div>
         </div>
         <p>The response body containing "true" indicates that the delete request was successful. Upon logging into the other account to verify, it was indeed surprising to find that I was able to delete the envelope associated with that account. This highlights a critical security issue, suggesting a lack of proper access controls and potential exposure to unauthorized data manipulation.</p>
-        <img src="bug-images/idor0-4.PNG" width="460" height="430">
+        <img src="bug-images/idor0-4.png" width="460" height="430">
         
     </div>
         </div>
