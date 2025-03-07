@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<!-- upto 2 directory depth-->
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Report</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="crossorigin"/>
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;700;800&amp;display=swap"/>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;700;800&amp;display=swap" media="print" onload="this.media='all'"/>
+    <noscript>
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;700;800&amp;display=swap"/>
+    </noscript>
+    <link href="../css/font-awesome/css/all.min.css?ver=1.2.0" rel="stylesheet">
+    <link href="../css/bootstrap-icons/bootstrap-icons.css?ver=1.2.0" rel="stylesheet">
+    <link href="../css/bootstrap.min.css?ver=1.2.0" rel="stylesheet">
+    <link href="../css/aos.css?ver=1.2.0" rel="stylesheet">
+    <link href="../css/main.css?ver=1.2.0" rel="stylesheet">
+    <link href="../css/code-con.css" rel="stylesheet">
+    <noscript>
+      <style type="text/css">
+        [data-aos] {
+            opacity: 1 !important;
+            transform: translate(0) scale(1) !important;
+        }
+      </style>
+    </noscript>
+    
+  </head>
+  <body id="top">
+    <header class="bg-light">
+      <nav class="navbar navbar-expand-lg navbar-light bg-light" id="header-nav" role="navigation">
+        <div class="container"><a class="link-dark navbar-brand site-title mb-0" href="#">Infrared Report</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav ms-auto me-2">
+              <li class="nav-item"><a class="nav-link" href="../#about">About</a></li>
+                        <li class="nav-item"><a class="nav-link" href="../bugbounty.html#">Bug Hunting</a></li>
+                        <li class="nav-item"><a class="nav-link" href="../blogs.html">Blogs</a></li>
+                        <li class="nav-item"><a class="nav-link" href="../web3.html">Web3</a></li>
+                      
+            </ul>
+          </div>
+        </div>
+      </nav>
+    </header>
+    <div class="page-content">
+      <div id="content">
+<header>
+
+</header>
+
+
+
+
+
+
+<div class="section px-3 px-lg-4 pt-5" id="webbug">
+  <div class="container-narrow">
+    <div class="text-center mb-5">
+      <h2 class="marker marker-center">Audit Report</h2>
+    </div>
+    <div class="row">
+      <div >
+        <div class="card mb-3" data-aos="fade-right" data-aos-delay="100">
+          <div class="card-header px-3 py-2">
+            <div class="d-flex justify-content-center">
+              <div >
+                <h3 class="h5  mb-1">Confirmed Infrared Issues  &nbsp;</h3>
+              </div><img src="../images/services/webpage.svg" width="48" height="45" alt="ui-ux"/>
+            </div>
+          </div>
+          <div class="card-body px-3 py-2">
+            <h2>Content</h2>
+            <ul>
+              <li>No Replacement Mechanism (Low)</li>
+              <li>Insufficient Blacklist Check (Medium)</li>
+              <li>Lack Of Modifier (Info)</li>
+              </ul><br>
+              <h2>Permanent Reward Token Addition Without Replacement Mechanism</h2>
+
+<p>
+    The reward system lacks a mechanism to replace blacklisted tokens in the <code>rewardTokens</code> array when the maximum limit (<code>MAX_NUM_REWARD_TOKENS</code>) is reached. This prevents adding new reward tokens even if some are blacklisted and inactive, potentially leading to vault lockout and token compromise.
+</p>
+
+<h4>Vulnerability Details</h4>
+<p>
+    The <code>addReward</code> function enforces a cap on the number of reward tokens. If the cap is reached and a token is blacklisted, it remains in the array, occupying a slot with no replacement mechanism. This prevents new tokens from being added, limiting the system's flexibility.
+</p>
+
+<h4>Impact</h4>
+<ul>
+    <li><strong>Inflexible Reward Management:</strong> Blacklisted tokens permanently take up slots, preventing new tokens from being added.</li>
+    <li><strong>Reduced Incentive Diversity:</strong> Users may lose interest due to limited reward options.</li>
+    <li><strong>Governance Bottlenecks:</strong> No mechanism exists to manage or replace outdated reward tokens.</li>
+</ul>
+
+<h4>Proof of Concept</h4>
+<div class="code-container" id="code2">
+    <div class="code-header">
+        <span>Function Code</span>
+        <button class="copy-button" onclick="copyCode('code2')">Copy</button>
+    </div>
+    <div class="code-content">
+        <pre>
+    <code>
+        function addReward(address _rewardsToken, uint256 _rewardsDuration)
+        external
+        onlyInfrared
+    {
+        if (_rewardsToken == address(0)) revert Errors.ZeroAddress();
+        if (_rewardsDuration == 0) revert Errors.ZeroAmount();
+@>  if (rewardTokens.length == MAX_NUM_REWARD_TOKENS) {
+            revert Errors.MaxNumberOfRewards();
+        }
+        _addReward(_rewardsToken, infrared, _rewardsDuration);
+    }
+
+    </code>
+        </pre>
+    </div>
+</div>
+</p>
+<img src="img/infra.png" width="700" height="100"><br>
+
+<p>
+
+    <h2>Insufficient Blacklist Check for Reward Tokens in addIncentives Function</h2>
+
+<p>
+    A logical flaw in the <code>addIncentives</code> function allows blacklisted reward tokens to bypass whitelist checks, enabling unauthorized addition of incentives for such tokens.
+</p>
+
+<h4>Vulnerability Details</h4>
+<p>
+    The <code>addIncentives</code> function determines if a reward token is whitelisted by checking its <code>_vaultRewardsDuration</code>. If the duration is non-zero, the token is treated as whitelisted. However, the <code>updateWhiteListedRewardTokens</code> function, which blacklists tokens, does not reset this duration. As a result, blacklisted tokens may still pass the whitelist check and receive incentives.
+</p>
+
+<h4>Impact</h4>
+<ul>
+    <li><strong>Unauthorized Fund Transfers:</strong> Blacklisted tokens may still accrue rewards.</li>
+    <li><strong>Governance Mechanism Failure:</strong> The intended blacklist enforcement is ineffective.</li>
+    <li><strong>System Misuse:</strong> Malicious actors can manipulate incentives for blacklisted tokens.</li>
+</ul>
+
+<h4>Proof of Concept</h4>
+
+<div class="code-container" id="code9">
+    <div class="code-header">
+        <span>Code Function</span>
+        <button class="copy-button" onclick="copyCode('code9')">Copy</button>
+    </div>
+    <div class="code-content">
+        <pre>
+    <code>
+        function updateWhiteListedRewardTokens(address _token, bool _whitelisted)
+        external
+        onlyGovernor
+    {
+        bool previousStatus = whitelistedRewardTokens(_token);
+        _vaultStorage().updateWhitelistedRewardTokens(_token, _whitelisted);
+        emit WhiteListedRewardTokensUpdated(
+            msg.sender, _token, previousStatus, _whitelisted
+        );
+    }
+
+    </code>
+        </pre>
+    </div>
+</div>
+
+<div class="code-container" id="code10">
+    <div class="code-header">
+        <span>Code Function</span>
+        <button class="copy-button" onclick="copyCode('code10')">Copy</button>
+    </div>
+    <div class="code-content">
+        <pre>
+    <code>
+        function addIncentives(
+            VaultStorage storage $,
+            address _stakingToken,
+            address _rewardsToken,
+            uint256 _amount
+        ) external {
+            if (address($.vaultRegistry[_stakingToken]) == address(0)) {
+                revert Errors.NoRewardsVault();
+            }
+    
+            IInfraredVault vault = $.vaultRegistry[_stakingToken];
+    
+            (, uint256 _vaultRewardsDuration,,,,,) = vault.rewardData(_rewardsToken);
+    
+    @>>     if (_vaultRewardsDuration == 0) {
+                revert Errors.RewardTokenNotWhitelisted();
+            }
+    
+            ERC20(_rewardsToken).safeTransferFrom(
+                msg.sender, address(this), _amount
+            );
+            ERC20(_rewardsToken).safeApprove(address(vault), _amount);
+    
+            vault.notifyRewardAmount(_rewardsToken, _amount);
+        }
+    
+
+    </code>
+        </pre>
+    </div>
+</div>
+<p><img src="img/infra2.png" width="700" height="100"><br></p>
+
+
+<h2>Anyone can call purge function</h2>
+
+<p>
+    The purge function has no modifier or access control, which meant anyone can call the function which will leads in removable of validator and its associated data from the system.  
+    
+</p>
+
+<h4>Vulnerability Details</h4>
+<p>
+    The docs of the Infrared mention that the Purge function can only be called by OnlyGovernor. But In actual, there is no implementation of Modifier "OnlyGovernor"       
+</p>
+
+
+<h4>Impact</h4>
+<ul>
+    <li>Any one can call the function , which result in deletion of snapshots as well as validators</li>
+</ul>
+
+<h4>Proof of Concept</h4>
+
+<div class="code-container" id="code91">
+    <div class="code-header">
+        <span>Code Function</span>
+        <button class="copy-button" onclick="copyCode('code91')">Copy</button>
+    </div>
+    <div class="code-content">
+        <pre>
+    <code>
+        /// @inheritdoc IInfraredDistributor
+        function purge(bytes calldata pubkey) external {
+            address validator = _validators[keccak256(pubkey)];
+            if (validator == address(0)) revert Errors.ValidatorDoesNotExist();
+    
+            Snapshot memory s = _snapshots[keccak256(pubkey)];
+            if (s.amountCumulativeLast != s.amountCumulativeFinal) {
+                revert Errors.ClaimableRewardsExist();
+            }
+    
+            delete _snapshots[keccak256(pubkey)];
+            delete _validators[keccak256(pubkey)];
+    
+            emit Purged(pubkey, validator);
+        }
+
+    </code>
+        </pre>
+    </div>
+</div>
+
+<p><img src="img/infra3.png" width="700" height="100"><br></p><br>
+
+
+
+             
+                
+                
+                
+                
+        
+        
+   
+  </div>
+</div>
+</div>
+        </div>
+      </div>
+      
+      
+     
+     
+      
+    </div>
+  </div>
+</div>
+<footer class="pt-4 pb-4 text-center bg-light">
+  <div class="container">
+    <div class="text-small text-secondary">
+      <div class="mb-1">&copy; Feel free to reach out to me at souvik09243@mail.com. I welcome any corrections or additional insights you may have.</div>
+      <div>
+    </div>
+  </div>
+</footer>
+
+</div>
+    </div>
+    <div id="scrolltop"><a class="btn btn-secondary" href="#top"><span class="icon"><i class="fas fa-angle-up fa-x"></i></span></a></div>
+    <script src="../scripts/imagesloaded.pkgd.min.js?ver=1.2.0"></script>
+    <script src="../scripts/masonry.pkgd.min.js?ver=1.2.0"></script>
+    <script src="../scripts/BigPicture.min.js?ver=1.2.0"></script>
+    <script src="../scripts/purecounter.min.js?ver=1.2.0"></script>
+    <script src="../scripts/bootstrap.bundle.min.js?ver=1.2.0"></script>
+    <script src="../scripts/aos.min.js?ver=1.2.0"></script>
+    <script src="../scripts/main.js?ver=1.2.0"></script>
+    <script>
+        function copyCode(codeId) {
+            var codeContainer = document.getElementById(codeId).querySelector('.code-content');
+            var range = document.createRange();
+            range.selectNode(codeContainer);
+            window.getSelection().removeAllRanges();
+            window.getSelection().addRange(range);
+            document.execCommand('copy');
+            window.getSelection().removeAllRanges();
+
+            var copyButton = document.querySelector('.copy-button');
+            copyButton.classList.add('copied');
+
+            setTimeout(function() {
+                copyButton.classList.remove('copied');
+            }, 500);
+        }
+    </script>
+  </body>
+</html>

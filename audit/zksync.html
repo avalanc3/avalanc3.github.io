@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<!-- upto 2 directory depth-->
+<html lang="en-US">
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Report</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="crossorigin"/>
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;700;800&amp;display=swap"/>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;700;800&amp;display=swap" media="print" onload="this.media='all'"/>
+    <noscript>
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;700;800&amp;display=swap"/>
+    </noscript>
+    <link href="../css/font-awesome/css/all.min.css?ver=1.2.0" rel="stylesheet">
+    <link href="../css/bootstrap-icons/bootstrap-icons.css?ver=1.2.0" rel="stylesheet">
+    <link href="../css/bootstrap.min.css?ver=1.2.0" rel="stylesheet">
+    <link href="../css/aos.css?ver=1.2.0" rel="stylesheet">
+    <link href="../css/main.css?ver=1.2.0" rel="stylesheet">
+    <link href="../css/code-con.css" rel="stylesheet">
+    <noscript>
+      <style type="text/css">
+        [data-aos] {
+            opacity: 1 !important;
+            transform: translate(0) scale(1) !important;
+        }
+      </style>
+    </noscript>
+    
+  </head>
+  <body id="top">
+    <header class="bg-light">
+      <nav class="navbar navbar-expand-lg navbar-light bg-light" id="header-nav" role="navigation">
+        <div class="container"><a class="link-dark navbar-brand site-title mb-0" href="#">ZkSync Report</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav ms-auto me-2">
+              <li class="nav-item"><a class="nav-link" href="../#about">About</a></li>
+                        <li class="nav-item"><a class="nav-link" href="../bugbounty.html#">Bug Hunting</a></li>
+                        <li class="nav-item"><a class="nav-link" href="../blogs.html">Blogs</a></li>
+                        <li class="nav-item"><a class="nav-link" href="../web3.html">Web3</a></li>
+                      
+            </ul>
+          </div>
+        </div>
+      </nav>
+    </header>
+    <div class="page-content">
+      <div id="content">
+<header>
+
+</header>
+
+
+
+
+
+
+<div class="section px-3 px-lg-4 pt-5" id="webbug">
+  <div class="container-narrow">
+    <div class="text-center mb-5">
+      <h2 class="marker marker-center">Audit Report</h2>
+    </div>
+    <div class="row">
+      <div >
+        <div class="card mb-3" data-aos="fade-right" data-aos-delay="100">
+          <div class="card-header px-3 py-2">
+            <div class="d-flex justify-content-center">
+              <div >
+                <h3 class="h5  mb-1">Confirmed ZkSync Issues  &nbsp;</h3>
+              </div><img src="../images/services/webpage.svg" width="48" height="45" alt="ui-ux"/>
+            </div>
+          </div>
+          <div class="card-body px-3 py-2">
+            <h2>Content</h2>
+            <ul>
+              <li>Double Dedecution (Medium)</li>
+              <li>Failed Bridge (Medium)</li>
+              </ul><br>
+              <h2>Double Deduction of Funds in _bridgeBurnNativeToken and _depositFunds</h2>
+
+              <p>
+                  The <code>_bridgeBurnNativeToken</code> function calls <code>transferFundsToNTV</code> to transfer funds from the <code>_originalCaller</code> and then calls <code>_depositFunds</code>, leading to the same funds being deducted twice. This causes unintended financial loss for users and disrupts bridge operations.
+              </p>
+              
+              <h4>Vulnerability Details</h4>
+              <p>
+                  The <code>_originalCaller</code> is charged twice for the same transaction:
+              </p>
+              <ul>
+                  <li><code>transferFundsToNTV</code> transfers funds to the Native Token Vault (NTV).</li>
+                  <li><code>_depositFunds</code> then transfers the same amount again from <code>_originalCaller</code>.</li>
+              </ul>
+              <p>
+                  This happens due to missing validation checks, leading to users losing funds unexpectedly.
+              </p>
+              
+              <div class="code-container" id="code1">
+                  <div class="code-header">
+                      <span>Code Snippet</span>
+                      <button class="copy-button" onclick="copyCode('code1')">Copy</button>
+                  </div>
+                  <div class="code-content">
+                      <pre>
+                  <code>
+                    function _bridgeBurnNativeToken(
+    uint256 _chainId,
+    bytes32 _assetId,
+    address _originalCaller,
+    bool _depositChecked,
+    bytes calldata _data
+) internal virtual returns (bytes memory _bridgeMintData) {
+    (uint256 _depositAmount, address _receiver) = abi.decode(_data, (uint256, address));
+
+    uint256 amount;
+    address nativeToken = tokenAddress[_assetId];
+    
+    // ETH token handling
+    if (_assetId == BASE_TOKEN_ASSET_ID) {
+        amount = msg.value;
+        
+        if (_depositAmount == 0) {
+            _depositAmount = amount;
+        }
+        _handleChainBalanceIncrease(_chainId, _assetId, amount, true);
+        if (_depositAmount != amount) {
+            revert ValueMismatch(_depositAmount, amount);
+        }
+    } else {
+        // ERC20 token handling
+        if (msg.value != 0) {
+            revert NonEmptyMsgValue();
+        }
+        amount = _depositAmount;
+        _handleChainBalanceIncrease(_chainId, _assetId, amount, true);
+
+        // Check if the deposit amount is valid
+        if (!_depositChecked) {
+            uint256 expectedDepositAmount = _depositFunds(_originalCaller, IERC20(nativeToken), _depositAmount);
+            if (amount != expectedDepositAmount) {
+                revert TokensWithFeesNotSupported();
+            }
+        }
+    }
+    
+    if (amount == 0) {
+        revert EmptyDeposit();
+    }
+
+    bytes memory erc20Metadata = getERC20Getters(nativeToken, originChainId[_assetId]);
+    _bridgeMintData = DataEncoding.encodeBridgeMintData({
+        _originalCaller: _originalCaller,
+        _remoteReceiver: _receiver,
+        _originToken: nativeToken,
+        _amount: amount,
+        _erc20Metadata: erc20Metadata
+    });
+
+    emit BridgeBurn({
+        chainId: _chainId,
+        assetId: _assetId,
+        sender: _originalCaller,
+        receiver: _receiver,
+        amount: amount
+    });
+}
+                  </code>
+                      </pre>
+                  </div>
+              </div>
+              <div class="code-container" id="code3">
+                <div class="code-header">
+                    <span>Code Snippet</span>
+                    <button class="copy-button" onclick="copyCode('code3')">Copy</button>
+                </div>
+                <div class="code-content">
+                    <pre>
+                <code>
+                    function _depositFunds(address _from, IERC20 _token, uint256 _amount) internal virtual returns (uint256) {
+                        uint256 balanceBefore = _token.balanceOf(address(this));
+                        
+                        // Transfer the funds
+                        _token.safeTransferFrom(_from, address(this), _amount);
+                        
+                        uint256 balanceAfter = _token.balanceOf(address(this));
+                        
+                        return balanceAfter - balanceBefore;
+                    }
+                </code>
+                    </pre>
+                </div>
+            </div>
+
+            <div class="code-container" id="code2">
+                <div class="code-header">
+                    <span>Code Snippet</span>
+                    <button class="copy-button" onclick="copyCode('code2')">Copy</button>
+                </div>
+                <div class="code-content">
+                    <pre>
+                <code>
+                    function transferFundsToNTV(
+                        bytes32 _assetId,
+                        uint256 _amount,
+                        address _originalCaller
+                    ) external onlyNativeTokenVault returns (bool) {
+                        address l1TokenAddress = INativeTokenVault(address(nativeTokenVault)).tokenAddress(_assetId);
+                        
+                        if (l1TokenAddress == address(0) || l1TokenAddress == ETH_TOKEN_ADDRESS) {
+                            return false;
+                        }
+                        
+                        IERC20 l1Token = IERC20(l1TokenAddress);
+                    
+                        bool weCanTransfer = false;
+                        
+                        // Check if allowance is enough for transfer
+                        if (l1Token.allowance(address(legacyBridge), address(this)) >= _amount) {
+                            _originalCaller = address(legacyBridge);
+                            weCanTransfer = true;
+                        } else if (
+                            l1Token.allowance(_originalCaller, address(this)) >= _amount &&
+                            l1Token.allowance(_originalCaller, address(nativeTokenVault)) < _amount
+                        ) {
+                            weCanTransfer = true;
+                        }
+                        
+                        if (weCanTransfer) {
+                            l1Token.safeTransferFrom(_originalCaller, address(nativeTokenVault), _amount);
+                            return true;
+                        }
+                        
+                        return false;
+                    }
+                </code>
+                    </pre>
+                </div>
+            </div>
+              
+              <h4>Impact</h4>
+              <p>
+                  Users are charged twice for the same transaction, leading to unintended fund loss and operational issues in the bridge mechanism.
+              </p>
+
+            </p>
+            <img src="img/zksync.png" width="700" height="100">
+            <p>
+              
+             
+                <h2>Incompatibility with USDT and Other Tokens Without Boolean Approval</h2>
+
+                <p>
+                    The <code>deposit</code> function in <code>L1ERC20Bridge.sol</code> expects a boolean return value from the <code>approve</code> function of ERC-20 tokens. However, many widely used tokens (e.g., USDT) do not return a boolean, causing transactions to revert. This makes the bridge contract incompatible with a large number of ERC-20 tokens, preventing users from bridging them.
+                </p>
+                
+                <h4>Vulnerability Details</h4>
+                <p>
+                    In the <code>L1ERC20Bridge::deposit</code> function, an internal call to <code>_approveFundsToAssetRouter</code> handles token approvals as follows:
+                </p>
+                
+                <div class="code-container" id="code7">
+                    <div class="code-header">
+                        <span>Code Snippet</span>
+                        <button class="copy-button" onclick="copyCode('code7')">Copy</button>
+                    </div>
+                    <div class="code-content">
+                        <pre>
+                    <code>
+                function _approveFundsToAssetRouter(
+                    address _from,
+                    IERC20 _token,
+                    uint256 _amount
+                ) internal returns (uint256) {
+                    uint256 balanceBefore = _token.balanceOf(address(this));
+                    _token.safeTransferFrom(_from, address(this), _amount);
+                
+                    bool success = _token.approve(address(L1_ASSET_ROUTER), _amount);
+                    // @audit will revert on USDT
+                    if (!success) {
+                        revert ApprovalFailed();
+                    }
+                
+                    uint256 balanceAfter = _token.balanceOf(address(this));
+                    return balanceAfter - balanceBefore;
+                }
+                    </code>
+                        </pre>
+                    </div>
+                </div>
+                
+                <p>
+                    The issue occurs because tokens like USDT do not return a boolean for approvals. Here is USDT’s <code>approve</code> function:
+                </p>
+                
+                <div class="code-container" id="code2">
+                    <div class="code-header">
+                        <span>USDT Approval Function</span>
+                        <button class="copy-button" onclick="copyCode('code2')">Copy</button>
+                    </div>
+                    <div class="code-content">
+                        <pre>
+                    <code>
+                function approve(address _spender, uint _value) public onlyPayloadSize(2 * 32) {
+                    require(!((_value != 0) && (allowed[msg.sender][_spender] != 0)));
+                    allowed[msg.sender][_spender] = _value;
+                    Approval(msg.sender, _spender, _value);
+                }
+                    </code>
+                        </pre>
+                    </div>
+                </div>
+                
+                <h4>Impact</h4>
+                <ul>
+                    <li>Users cannot bridge tokens like USDT and BNB.</li>
+                    <li>The protocol may lose transaction fees and volume due to incompatibility with widely used tokens.</li>
+                </ul>
+            </p>
+            <img src="img/zksync2.png" width="700" height="100">
+            <p>
+                
+                
+                
+        
+        
+   
+  </div>
+</div>
+</div>
+        </div>
+      </div>
+      
+      
+     
+     
+      
+    </div>
+  </div>
+</div>
+<footer class="pt-4 pb-4 text-center bg-light">
+  <div class="container">
+    <div class="text-small text-secondary">
+      <div class="mb-1">&copy; Feel free to reach out to me at souvik09243@mail.com. I welcome any corrections or additional insights you may have.</div>
+      <div>
+    </div>
+  </div>
+</footer>
+
+</div>
+    </div>
+    <div id="scrolltop"><a class="btn btn-secondary" href="#top"><span class="icon"><i class="fas fa-angle-up fa-x"></i></span></a></div>
+    <script src="../scripts/imagesloaded.pkgd.min.js?ver=1.2.0"></script>
+    <script src="../scripts/masonry.pkgd.min.js?ver=1.2.0"></script>
+    <script src="../scripts/BigPicture.min.js?ver=1.2.0"></script>
+    <script src="../scripts/purecounter.min.js?ver=1.2.0"></script>
+    <script src="../scripts/bootstrap.bundle.min.js?ver=1.2.0"></script>
+    <script src="../scripts/aos.min.js?ver=1.2.0"></script>
+    <script src="../scripts/main.js?ver=1.2.0"></script>
+    <script>
+        function copyCode(codeId) {
+            var codeContainer = document.getElementById(codeId).querySelector('.code-content');
+            var range = document.createRange();
+            range.selectNode(codeContainer);
+            window.getSelection().removeAllRanges();
+            window.getSelection().addRange(range);
+            document.execCommand('copy');
+            window.getSelection().removeAllRanges();
+
+            var copyButton = document.querySelector('.copy-button');
+            copyButton.classList.add('copied');
+
+            setTimeout(function() {
+                copyButton.classList.remove('copied');
+            }, 500);
+        }
+    </script>
+  </body>
+</html>
